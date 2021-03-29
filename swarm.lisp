@@ -554,7 +554,7 @@
 		     (:td (:p :class "text" "Click and drag")))))
      (:script :type "text/javascript" 
 	      (str (ps (lisp *ps-lisp-library*))))
-     (:script :src "bundle.js"))))
+     (:script :src "js.js"))))
 
 (defun save-str-to-file (str path)
   (with-open-file (s path :direction :output :if-exists :supersede)
@@ -576,7 +576,8 @@
 			:port 8080)))
 
 "
-Use rk45js (see top of MODEL section)
+find out why using bundle.js doesn't work
+use rk45js (see top of MODEL section)
 You shouldn't be able to control the prey while the
   view is locked to the prey. Similarly for predator.
 add a toggle for the lock view

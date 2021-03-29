@@ -103,8 +103,8 @@ td {
     var arrs = Array.prototype.slice.call(arguments, 1);
     var resultArray = new Array();
     if (1 === arrs.length) {
-        for (var element = null, _js_arrvar2236 = arrs[0], _js_idx2235 = 0; _js_idx2235 < _js_arrvar2236.length; _js_idx2235 += 1) {
-            element = _js_arrvar2236[_js_idx2235];
+        for (var element = null, _js_arrvar584 = arrs[0], _js_idx583 = 0; _js_idx583 < _js_arrvar584.length; _js_idx583 += 1) {
+            element = _js_arrvar584[_js_idx583];
             resultArray.push(fun(element));
         };
     } else {
@@ -121,8 +121,8 @@ td {
 /** Call FN on each element in ARR, replace element with the return value. */
 function mapInto(fn, arr) {
     var idx = 0;
-    for (var el = null, _js_idx2237 = 0; _js_idx2237 < arr.length; _js_idx2237 += 1) {
-        el = arr[_js_idx2237];
+    for (var el = null, _js_idx585 = 0; _js_idx585 < arr.length; _js_idx585 += 1) {
+        el = arr[_js_idx585];
         arr[idx] = fn(el);
         idx += 1;
     };
@@ -133,8 +133,8 @@ function mapInto(fn, arr) {
 function map(fn, arr) {
     var idx = 0;
     var result = [];
-    for (var el = null, _js_idx2238 = 0; _js_idx2238 < arr.length; _js_idx2238 += 1) {
-        el = arr[_js_idx2238];
+    for (var el = null, _js_idx586 = 0; _js_idx586 < arr.length; _js_idx586 += 1) {
+        el = arr[_js_idx586];
         result[idx] = fn(el);
         idx += 1;
     };
@@ -143,8 +143,8 @@ function map(fn, arr) {
 };
 /** Check if ITEM is a member of ARR. */
 function member(item, arr) {
-    for (var el = null, _js_idx2239 = 0; _js_idx2239 < arr.length; _js_idx2239 += 1) {
-        el = arr[_js_idx2239];
+    for (var el = null, _js_idx587 = 0; _js_idx587 < arr.length; _js_idx587 += 1) {
+        el = arr[_js_idx587];
         if (el === item) {
             return true;
         };
@@ -155,8 +155,8 @@ function member(item, arr) {
 function setDifference(arr, arrToSub) {
     var idx = 0;
     var result = [];
-    for (var el = null, _js_idx2240 = 0; _js_idx2240 < arr.length; _js_idx2240 += 1) {
-        el = arr[_js_idx2240];
+    for (var el = null, _js_idx588 = 0; _js_idx588 < arr.length; _js_idx588 += 1) {
+        el = arr[_js_idx588];
         if (!member(el, arrToSub)) {
             result[idx] = el;
             idx += 1;
@@ -175,9 +175,9 @@ function reduce(func, list, init) {
 function nconc(arr) {
     var arrs = Array.prototype.slice.call(arguments, 1);
     if (arr && arr.length > 0) {
-        var _js2242 = arrs.length;
-        for (var _js2241 = 0; _js2241 < _js2242; _js2241 += 1) {
-            var other = arrs[_js2241];
+        var _js590 = arrs.length;
+        for (var _js589 = 0; _js589 < _js590; _js589 += 1) {
+            var other = arrs[_js589];
             if (other && other.length > 0) {
                 arr["splice"]["apply"](arr, [arr.length, other.length].concat(other));
             };
@@ -187,5 +187,5 @@ function nconc(arr) {
     return arr;
 };;
   </script>
-  <script src='bundle.js'></script>
+  <script src='js.js'></script>
 </html>
