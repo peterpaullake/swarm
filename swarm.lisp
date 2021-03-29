@@ -105,6 +105,9 @@
 
     ;; MODEL
 
+    ;; (defparameter *rk45* (require "./rk45.js"))
+    ;; (msg (chain *rk45* -system))
+
     (defun compute-pred-dxdt (pred-xy prey-coords &optional (c *c*) (p *p*))
       (let ((n (length prey-coords))
 	    (z pred-xy))
@@ -138,7 +141,7 @@
 
     (defun color->str (color)
       "Convert a 3d color with components
-       ranging from 0-1 to CSS rgb notation."
+       ranging from 0 to 1 to CSS rgb notation."
       (let ((comps (mapcar (lambda (x) ((chain -math round) (* 255 x)))
 			   color)))
 	(+ "rgb(" (elt comps 0) "," (elt comps 1) "," (elt comps 2) ")")))
@@ -551,11 +554,17 @@
 		     (:td (:p :class "text" "Click and drag")))))
      (:script :type "text/javascript" 
 	      (str (ps (lisp *ps-lisp-library*))))
-     (:script :type "text/javascript"
-	      (str *js*)))))
+     (:script :src "bundle.js"))))
 
-(with-open-file (s "www/index.html" :direction :output :if-exists :supersede)
-  (write-sequence *html* s))
+(defun save-str-to-file (str path)
+  (with-open-file (s path :direction :output :if-exists :supersede)
+    (write-sequence str s)))
+
+;; Save the js to the disk
+(save-str-to-file *js* "www/js.js")
+;; Use browserify so that we can use rk45js
+(uiop:run-program "browserify www/js.js -o www/bundle.js" :output t)
+(save-str-to-file *html* "www/index.html")
 
 (define-easy-handler (home :uri "/") ()
   *html*)
@@ -567,11 +576,12 @@
 			:port 8080)))
 
 "
+Use rk45js (see top of MODEL section)
 You shouldn't be able to control the prey while the
   view is locked to the prey. Similarly for predator.
-use this (rk45, which has adaptive step size):
-  https://github.com/imiRemy/RK45js
 add a toggle for the lock view
 add a play/pause button
 add presets to look at the various regimes
+pressing ctrl and shift with the cursor
+  outside the canvas shouldn't do anything
 "
