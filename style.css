@@ -1,0 +1,28 @@
+.dark-bg {
+    background-color: #0a0a0a;
+}
+
+.text {
+    color: #bbbbbb;
+    font-family: 'Ubuntu Mono', monospace;
+}
+
+/* #params-table {
+    float: top;
+} */
+
+#game-canvas {
+    float: left;
+}
+
+#help-table td {
+    padding: 10px;
+}
+
+td {
+    vertical-align: top;
+}
+
+.no-top-margin {
+    margin-top: 0;
+}
