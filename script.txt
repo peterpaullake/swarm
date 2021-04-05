@@ -1,0 +1,21 @@
+SLIDE 1
+
+(Make sure screencast and microphone are working)
+
+Alright so the title of my presentation here is predator-swarm interactions, and I'm just going to just right into it.
+
+SLIDE 2
+
+Right so the paper I'm going to be talking about is this paper from Chen and Kolokolnikov called "a minimal model of predator-swarm interactions".
+
+SLIDE 3
+
+So now I'm going to introduce the paper. Basically the idea is that in nature, you often have this situation where you have a bunch of prey animals, and they're being hunted by a predator. You can think of maybe a herd of zebras vs as lion or something. And often what happens is instead of the prey just like running away in random directions, they have this swarming behavior where they are trying to get away from the predator, but they also sort of stick together.
+
+So basically what this paper does is it introduces a model of this predator-swarm situation, and it sort of tries to hit a balance between being complicated enough to model the situation accurately and being simple enough to do some analysis stuff, like find the study the steady states and study their stabilities.
+
+SLIDE 4
+
+So now I'm going to introduce the model from the paper. We're going to look at a more general version a little later on where we trade away some of the simplicity for more accuracy, but for now we're just sticking to the simple version where it's easy to find the steady states. And this simple version is actually pretty good. It captures a lot of the things you see in the physical situation.
+
+So we're imagining that our prey and our predator live in 2D on the complex plane. I guess if you wanted to think about like a flock of birds or a school of fish you might want to extend this to 3D, but we'll stick with 2D because it's easy to draw.

@@ -544,18 +544,25 @@
 	(dolist (point points)
 	  (append-child "p" "text large-font-size" point
 			(append-child "li" "text" "" ul)))
-	((chain div append-child) ul)))
+	((chain div append-child) ul)
+	;; Call mathjax to do math typesetting
+	((chain -math-jax typeset))))
 
     (defparameter *slide-i* 0)
     (defparameter *slides*
       (list
+       (make-slide "Predator-swarm interactions" '())
        (make-slide "The paper"
 		   '("A minimal model of predator-swarm interactions"
-		     "Something something"
-		     "nnnnnn"))
-       (make-slide "Slide 2!"
-		   '("aoijdoisajd"
-		     "oidjsaoid"))
+		     "Chen and Kolokolnikov"))
+       (make-slide "Motivation"
+		   '("Group of prey being hunted by a predator"
+		     "Zebras vs lion, etc"
+		     "The prey swarm while trying to get away"))
+       (make-slide "The model"
+		   '("\\(N\\) prey live on \\(R^2\\)"
+		     "One predator lives on \\(R^2\\)"
+		     "The predator is trying to catch the prey"))
        ))
     (show-slide 0 *slides*)
 
@@ -596,13 +603,9 @@
 	    ;; 	:href "javascript:;"
 	    ;; 	"Live demo")
 	    (:div :class "row light-bg"
-		  (:div :id "slides-div" :class "column"
-			(:h1 :class "text" "The paper")
-			(:p :class "text large-font-size"
-			    "A minimal model of predator-swarm interactions"))
-		  (:div :id "demo" :class "column"
-			(:p :class "text"
-			    "This is where I will show the demo stuff.")
+		  (:div :id "slides-div" :class "column")
+		  (:div :id "media-div" :class "column"
+			(:img :src "swarm-01.png")
 			(:table :id "params-table"
 				:style "visibility: hidden;")))
 	    (:canvas :id "game-canvas")
@@ -650,6 +653,9 @@
 			:port 8080)))
 
 "
+continue writing slide 4 script
+fix mathjax blocking issue (maybe wait until it's loaded before
+  drawing a slide?)
 try wasm stuff
 add a way to pause/resume
 You should have float ranges and int ranges
