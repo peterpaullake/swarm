@@ -12,17 +12,12 @@
 #endif
 
 #include <cmath>
-#include <cstdlib>
+#include <stdlib.h>
 #include <vector>
 
-#ifdef USE_ODEINT
-using namespace boost::numeric::odeint;
-#endif
-
 typedef std::vector<double> state_type;
-// typedef double* state_type;
 
-const int n = 300;
+const int n = 400;
 const double a = 0.796;
 const double b = 0.708;
 const double c = 15.0;
@@ -110,24 +105,16 @@ void print_state(const state_type &state, const double t) {
 #endif
 
 struct push_back_state_and_time {
-  int m_i;
-  const int m_state_size;
-  double* m_buffer;
+  std::vector<state_type>& m_states;
+  std::vector<double>& m_times;
 
-  push_back_state_and_time(const int state_size,
-			   double* buffer)
-    : m_i(0), m_state_size(state_size), m_buffer(buffer) {}
+  push_back_state_and_time(std::vector<state_type> &states,
+			   std::vector<double> &times)
+    : m_states(states), m_times(times) {}
 
-  void operator()(const state_type &state , const double /*t*/) {
-    /* If this is not the first step (which is
-       just the initial conditions), save it */
-    if (m_i > 0) {
-      int i = m_i - 1;
-      memcpy(&m_buffer[i * m_state_size],
-	     &state[0],
-	     sizeof(double) * m_state_size);
-    }
-    m_i++;
+  void operator()(const state_type &state , const double t) {
+    m_states.push_back(state);
+    m_times.push_back(t);
   }
 };
 
@@ -142,53 +129,48 @@ extern "C" {
 }
 #endif
 
-double* allocate_state_buffer(const int state_size, const int n_states) {
-  return (double*)malloc(sizeof(double) * state_size * n_states);
-}
-
-void free_state_buffer(double* buffer) {
-  free(buffer);
-}
-
-void set_initial_conditions(const int state_size, double* buffer) {
-  /* Initialize the predator and prey positions
-     randomly inside the unit square [0,1] x [0,1] */
-  for (int i = 0; i < state_size; i++) {
-    buffer[i] = (double)rand() / (double)RAND_MAX;
-  }
-}
-
-void copy_initial_conditions(const int state_size,
-			     const int n_states,
-			     const double* buffer_src,
-			     double* buffer_dest) {
-  /* Copy the last state of the given states buffer to another state buffer */
-  memcpy(buffer_dest,
-	 &buffer_src[state_size * (n_states - 1)],
-	 sizeof(double) * state_size);
-}
-
-void simulate(const int state_size, const int n_states,
-	      const double* buffer0, double* buffer) {
-  adams_bashforth_moulton<5, state_type> stepper;
-  state_type state0 = state_type(buffer0, buffer0 + state_size);
-  integrate_n_steps(stepper, rhs, state0, 0.0, 0.1, n_states,
-		    push_back_state_and_time(state_size, buffer));
-}
-
 #ifndef USE_WASM
 int main() {
-  const int state_size = 2 * (n + 1);
-  double* buffer0 = allocate_state_buffer(state_size, 1);
-  set_initial_conditions(state_size, buffer0);
+#ifdef USE_ODEINT
+  using namespace boost::numeric::odeint;
+#endif
 
-  const int n_states = 60;
-  double* buffer = allocate_state_buffer(state_size, n_states);
+  /* Create the initial conditions */
+  const int state_size = 2 + 2 * n;
+  state_type state0 = state_type(state_size);
+  for (int i = 0; i < state_size; i++) {
+    state0[i] = (double)rand() / (double)RAND_MAX;
+  }
 
-  simulate(state_size, n_states, buffer0, buffer);
+  /* Create the vectors to hold the solution */
+  std::vector<state_type> states;
+  std::vector<double> times;
 
-  free_state_buffer(buffer);
-  free_state_buffer(buffer0);
+#ifdef USE_ODEINT
+  /* Use a multistep method to solve the equation. We use a
+     multistep method because calling our right-hand side
+     function is expensive (nested for loops), and multistep
+     methods are supposed to limit the amount of calls. */
+  adams_bashforth_moulton<5, state_type> stepper;
+  // adams_bashforth<5, state_type> stepper;
+  integrate_n_steps(stepper, rhs, state0, 0.0, 0.01, 120,
+		    push_back_state_and_time(states, times));
+  for (size_t i = 0; i < states.size(); i++) {
+    print_state(states[i], times[i]);
+    if (i > 0) {
+      std::cout << "Stepped by " << times[i] - times[i - 1] << "\n";
+    }
+  }
+  std::cout << "states.size() = " << states.size() << ", ";
+  std::cout << "times.size() = " << times.size() << "\n";
+#endif
+
   return 0;
 }
 #endif
+
+/*
+  Initialize ics randomly
+  Initialize the ics from javascript
+  Find out how to change the rhs params after compile time
+*/

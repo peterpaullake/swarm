@@ -512,28 +512,77 @@
     (init-game *game-state* ((chain document get-element-by-id) "game-canvas"))
     ;; (run-game *game-state*)
 
-    ;; DELETE ME
+    ;; SLIDES
 
-    (msg "Ok, let's try some wasm stuff")
+    (defun make-slide (title points)
+      (let ((slide (create)))
+	(setf (chain slide title) title)
+	(setf (chain slide points) points)
+	slide))
 
-    ;; (setf (chain -module on-runtime-initialized)
-    ;; 	  (lambda ()
-    ;; 	    (let ((version ((chain -module cwrap) "get_version" "number" '())))
-    ;; 	      nil)))
+    (defun append-child (type classes body parent)
+      (let ((child ((chain document create-element) type)))
+	((chain child set-attribute) "class" classes)
+	(setf (inner-html child) body)
+	((chain parent append-child) child)
+	child))
 
-    ))
+    (defun show-slide (i slides &optional (div-id "slides-div"))
+      (let* ((slide (elt slides i))
+	     (title (chain slide title))
+	     (points (chain slide points))
+	     (ul ((chain document create-element) "ul"))
+	     (div ((chain document get-element-by-id) div-id)))
+	;; Clear the slide
+	(setf (inner-html div) "")
+	;; Add the slide counter
+	(append-child "p" "text small-font-size" (+ (1+ i) "/" (length slides))
+		      div)
+	;; Add the title
+	(append-child "h1" "text" title div)
+	;; Add the points
+	(dolist (point points)
+	  (append-child "p" "text large-font-size" point
+			(append-child "li" "text" "" ul)))
+	((chain div append-child) ul)))
+
+    (defparameter *slide-i* 0)
+    (defparameter *slides*
+      (list
+       (make-slide "The paper"
+		   '("A minimal model of predator-swarm interactions"
+		     "Something something"
+		     "nnnnnn"))
+       (make-slide "Slide 2!"
+		   '("aoijdoisajd"
+		     "oidjsaoid"))
+       ))
+    (show-slide 0 *slides*)
+
+    ((chain document add-event-listener) "keydown"
+     (lambda (e)
+       (cond ((equal (chain e code) "KeyJ")
+	      (when (< *slide-i* (1- (length *slides*)))
+		(incf *slide-i*)
+		(show-slide *slide-i* *slides*)))
+	     ((equal (chain e code) "KeyK")
+	      (when (> *slide-i* 0)
+		(decf *slide-i*)
+		(show-slide *slide-i* *slides*))))))))
 
 (defparameter *html*
   (with-html-output-to-string (s nil :indent t)
     (:html
      (:head
       (:meta :charset "utf-8")
-      (:title "Predator-swarm interactions")
+      (:title "Predator-swarm")
       (str (uiop:read-file-string "fonts.html"))
-      (:style (str (uiop:read-file-string "style.css"))))
+      (:style (str (uiop:read-file-string "style.css")))
+      (str (uiop:read-file-string "mathjax.html")))
      ;; (:link :href "style.css" :rel "stylesheet"))
      (:body :class "dark-bg"
-	    (:h1 :class "text" "Predator-swarm interactions")
+	    ;; (:h2 :class "text"
+	    ;; 	 "A minimal model of predator-swarm interactions")
 	    (:a :class "text"
 		:href "https://arxiv.org/abs/1403.3250"
 		"Paper")
@@ -541,18 +590,22 @@
 	    (:a :class "text"
 		:href "https://github.com/peterpaullake/swarm"
 		"GitHub repo")
-	    ;; (:br)
-	    ;; (:a :class "text"
-	    ;; 	:href "javascript:;"
-	    ;; 	"Slides")
-	    ;; (:br)
+	    (:br)
+	    (:br)
 	    ;; (:a :class "text"
 	    ;; 	:href "javascript:;"
 	    ;; 	"Live demo")
-	    (:br)
-	    (:br)
+	    (:div :class "row light-bg"
+		  (:div :id "slides-div" :class "column"
+			(:h1 :class "text" "The paper")
+			(:p :class "text large-font-size"
+			    "A minimal model of predator-swarm interactions"))
+		  (:div :id "demo" :class "column"
+			(:p :class "text"
+			    "This is where I will show the demo stuff.")
+			(:table :id "params-table"
+				:style "visibility: hidden;")))
 	    (:canvas :id "game-canvas")
-	    (:table :id "params-table")
 	    (:table :id "help-table" :style "visibility: hidden;"
 		    (:tr
 		     (:td (:h2 :class "text" "Help"))
@@ -571,30 +624,51 @@
 		     (:td (:p :class "text" "Click and drag")))))
      (:script :type "text/javascript" 
 	      (str (ps (lisp *ps-lisp-library*))))
-     (:script :src "solver.js")
+     ;; (:script :src "solver.js")
      (:script :type "text/javascript" (str *js*)))))
 
-;; (defun save-str-to-file (str path)
-;;   (with-open-file (s path :direction :output :if-exists :supersede)
-;;     (write-sequence str s)))
+(defun save-str-to-file (str path)
+  (with-open-file (s path :direction :output :if-exists :supersede)
+    (write-sequence str s)))
 
-;; Save the js to the disk
-;; (save-str-to-file *js* "www/js.js")
-;; Use browserify so that we can use rk45js
-;; (uiop:run-program "browserify www/js.js -o www/bundle.js" :output t)
-;; (save-str-to-file *html* "www/index.html")
+;; Save the html to the disk
+(save-str-to-file *html* "www/index.html")
 
 (define-easy-handler (home :uri "/") () *html*)
 
-(define-easy-handler (solver-js :uri "/solver.js") ()
-  (uiop:read-file-string "solver/solver.js"))
+;; (define-easy-handler (solver-js :uri "/solver.js") ()
+;;   (uiop:read-file-string "solver/solver.js"))
 
-(define-easy-handler (solver-wasm :uri "/solver.wasm") ()
-  (setf (content-type*) "application/wasm")
-  (uiop:read-file-string "solver/solver.wasm"))
+;; (define-easy-handler (solver-wasm :uri "/solver.wasm") ()
+;;   (setf (content-type*) "application/wasm")
+;;   (uiop:read-file-string "solver/solver.wasm"))
 
 (defparameter *server*
   (start (make-instance 'easy-acceptor
 			:address "0.0.0.0" ;; localhost
 			:document-root #p"www/"
 			:port 8080)))
+
+"
+try wasm stuff
+add a way to pause/resume
+You should have float ranges and int ranges
+allow for multiple predators
+You shouldn't be able to control the prey while the
+  view is locked to the prey. Similarly for predator.
+add a toggle for the lock view
+add a play/pause button
+add presets to look at the various regimes
+make canvas resizable
+pressing ctrl and shift with the cursor
+  outside the canvas shouldn't do anything
+you should be able to turn on trails
+make this into a multiplayer game (like
+  a lame version of slither.io)
+When you define a user param, you should have to specify a default value,
+  and there should be a 'reset params and view' button.
+Try the second-order model
+Try swapping predator/prey roles. Basically a simulator for the game of tag.
+Try having the predator actually eat the prey, and plot the number
+  of prey over time like in the paper
+"

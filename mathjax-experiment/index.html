@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  </head>
+  <body>
+    <p id='p' style='font-size: 50px;'>The model is
+      \[
+      \displaylines{
+      \frac{dx_j}{dt}
+      = \frac{1}{N} \sum_{k, k \neq j}^{N}
+      \left(\frac{x_j - x_k}{|x_j - x_k|^2}
+      - a (x_j - x_k)\right)
+      + b \frac{x_j - z}{|x_j - z|^2},
+      \\
+      \frac{dz}{dt}
+      = \frac{c}{N} \sum_{k, k \neq j}^{N} \frac{x_k - z}{|x_k - z|^p}}
+      \]
+      where
+    </p>
+  </body>
+</html>

@@ -1,0 +1,821 @@
+
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>Predator-swarm
+    </title><link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <style>.dark-bg {
+    background-color: #0a0a0a;
+}
+
+.light-bg {
+    background-color: #151515;
+}
+
+.text {
+    color: #bbbbbb;
+    font-family: 'Ubuntu Mono', monospace;
+}
+
+.small-font-size {
+    font-size: 10px;
+}
+
+.large-font-size {
+    font-size: 20px;
+}
+
+#game-canvas {
+    float: left;
+}
+
+#help-table td {
+    padding: 10px;
+}
+
+td {
+    vertical-align: top;
+}
+
+.zero-top-margin {
+    margin-top: 0;
+}
+
+/* Two-column layout from
+   https://www.w3schools.com/howto/howto_css_two_columns.asp */
+
+.column {
+  float: left;
+  width: 50%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+    </style><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  </head>
+  <body class='dark-bg'>
+    <a class='text' href='https://arxiv.org/abs/1403.3250'>Paper
+    </a>
+    <br />
+    <a class='text' href='https://github.com/peterpaullake/swarm'>GitHub repo
+    </a>
+    <br />
+    <br />
+    <div class='row light-bg'>
+      <div id='slides-div' class='column'>
+        <h1 class='text'>The paper
+        </h1>
+        <p class='text large-font-size'>A minimal model of predator-swarm interactions
+        </p>
+      </div>
+      <div id='demo' class='column'>
+        <p class='text'>This is where I will show the demo stuff.
+        </p>
+        <table id='params-table' style='visibility: hidden;'></table>
+      </div>
+    </div>
+    <canvas id='game-canvas'></canvas>
+    <table id='help-table' style='visibility: hidden;'>
+      <tr>
+        <td>
+          <h2 class='text'>Help
+          </h2>
+        </td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>
+          <p class='text'>Control predator
+          </p>
+        </td>
+        <td>
+          <p class='text'>Hold ctrl
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p class='text'>Control prey
+          </p>
+        </td>
+        <td>
+          <p class='text'>Hold shift
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p class='text'>Zoom in/out
+          </p>
+        </td>
+        <td>
+          <p class='text'>Scroll
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p class='text'>Move viewport
+          </p>
+        </td>
+        <td>
+          <p class='text'>Click and drag
+          </p>
+        </td>
+      </tr>
+    </table>
+  </body>
+  <script type='text/javascript'>function mapcar(fun) {
+    var arrs = Array.prototype.slice.call(arguments, 1);
+    var resultArray = new Array();
+    if (1 === arrs.length) {
+        for (var element = null, _js_arrvar20820 = arrs[0], _js_idx20819 = 0; _js_idx20819 < _js_arrvar20820.length; _js_idx20819 += 1) {
+            element = _js_arrvar20820[_js_idx20819];
+            resultArray.push(fun(element));
+        };
+    } else {
+        for (var i = 0; i < arrs[0].length; i += 1) {
+            var argsArray = mapcar(function (a) {
+                return a[i];
+            }, arrs);
+            resultArray.push(fun.apply(fun, argsArray));
+        };
+    };
+    __PS_MV_REG = [];
+    return resultArray;
+};
+/** Call FN on each element in ARR, replace element with the return value. */
+function mapInto(fn, arr) {
+    var idx = 0;
+    for (var el = null, _js_idx20821 = 0; _js_idx20821 < arr.length; _js_idx20821 += 1) {
+        el = arr[_js_idx20821];
+        arr[idx] = fn(el);
+        idx += 1;
+    };
+    __PS_MV_REG = [];
+    return arr;
+};
+/** Call FN on each element in ARR and return the returned values in a new array. */
+function map(fn, arr) {
+    var idx = 0;
+    var result = [];
+    for (var el = null, _js_idx20822 = 0; _js_idx20822 < arr.length; _js_idx20822 += 1) {
+        el = arr[_js_idx20822];
+        result[idx] = fn(el);
+        idx += 1;
+    };
+    __PS_MV_REG = [];
+    return result;
+};
+/** Check if ITEM is a member of ARR. */
+function member(item, arr) {
+    for (var el = null, _js_idx20823 = 0; _js_idx20823 < arr.length; _js_idx20823 += 1) {
+        el = arr[_js_idx20823];
+        if (el === item) {
+            return true;
+        };
+    };
+    return false;
+};
+/** Return a new array with only those elements in ARR that are not in ARR-TO-SUB. */
+function setDifference(arr, arrToSub) {
+    var idx = 0;
+    var result = [];
+    for (var el = null, _js_idx20824 = 0; _js_idx20824 < arr.length; _js_idx20824 += 1) {
+        el = arr[_js_idx20824];
+        if (!member(el, arrToSub)) {
+            result[idx] = el;
+            idx += 1;
+        };
+    };
+    __PS_MV_REG = [];
+    return result;
+};
+function reduce(func, list, init) {
+    var acc = null;
+    for (var i = arguments.length === 3 ? -1 : 0, acc = arguments.length === 3 ? init : list[0]; i < list.length - 1; i += 1, acc = func(acc, list[i])) {
+    };
+    __PS_MV_REG = [];
+    return acc;
+};
+function nconc(arr) {
+    var arrs = Array.prototype.slice.call(arguments, 1);
+    if (arr && arr.length > 0) {
+        var _js20826 = arrs.length;
+        for (var _js20825 = 0; _js20825 < _js20826; _js20825 += 1) {
+            var other = arrs[_js20825];
+            if (other && other.length > 0) {
+                arr["splice"]["apply"](arr, [arr.length, other.length].concat(other));
+            };
+        };
+    };
+    __PS_MV_REG = [];
+    return arr;
+};;
+  </script>
+  <script type='text/javascript'>function floatgreaterthanStr(x, nDigits) {
+    if (nDigits === undefined) {
+        nDigits = 4;
+    };
+    __PS_MV_REG = [];
+    return Number(x).toFixed(nDigits);
+};
+/** Generate a list of letters from a to z. */
+function genAlphabet() {
+    __PS_MV_REG = [];
+    return mapIndex(function (i) {
+        __PS_MV_REG = [];
+        return String.fromCharCode(97 + i);
+    }, 26);
+};
+/** Generate a string made from random letters from the alphabet. */
+function genRandStr(nChars) {
+    if (nChars === undefined) {
+        nChars = 8;
+    };
+    var alphabet = genAlphabet();
+    var s = "";
+    for (var i = 0; i < nChars; i += 1) {
+        s += alphabet[Math.floor(Math.random() * nChars)];
+    };
+    var i = null;
+    __PS_MV_REG = [];
+    return s;
+};
+function mapIndex(fn, count) {
+    var lst = [];
+    for (var i = 0; i < count; i += 1) {
+        lst.push(fn(i));
+    };
+    var i = null;
+    __PS_MV_REG = [];
+    return lst;
+};
+/** Print ARGS to the console. */
+function msg() {
+    var args = Array.prototype.slice.call(arguments, 0);
+    var butlast = function (lst) {
+        __PS_MV_REG = [];
+        return lst.slice(0, -1);
+    };
+    var last = function (lst) {
+        return lst[lst.length - 1];
+    };
+    var str = "";
+    for (var arg = null, _js_arrvar20772 = butlast(args), _js_idx20771 = 0; _js_idx20771 < _js_arrvar20772.length; _js_idx20771 += 1) {
+        arg = _js_arrvar20772[_js_idx20771];
+        str = str + arg + " ";
+    };
+    str += last(args);
+    __PS_MV_REG = [];
+    return console.log(str);
+};
+/** Return the current time in milliseconds. */
+function getTime() {
+    __PS_MV_REG = [];
+    return performance.now();
+};
+function vecplus(v1_20773, v2_20774) {
+    __PS_MV_REG = [];
+    return mapcar(function (a, b) {
+        return a + b;
+    }, v1_20773, v2_20774);
+};
+function vec(v1_20775, v2_20776) {
+    __PS_MV_REG = [];
+    return mapcar(function (a, b) {
+        return a - b;
+    }, v1_20775, v2_20776);
+};
+function vecstar(v1_20777, v2_20778) {
+    __PS_MV_REG = [];
+    return mapcar(function (a, b) {
+        return a * b;
+    }, v1_20777, v2_20778);
+};
+function scaleVec(a, v) {
+    __PS_MV_REG = [];
+    return mapcar(function (b) {
+        return a * b;
+    }, v);
+};
+function sum(lst) {
+    var s = 0;
+    for (var x = null, _js_idx20779 = 0; _js_idx20779 < lst.length; _js_idx20779 += 1) {
+        x = lst[_js_idx20779];
+        s += x;
+    };
+    var x = null;
+    return s;
+};
+function vecDot(v1, v2) {
+    __PS_MV_REG = [];
+    return sum(mapcar(function (a, b) {
+        return a * b;
+    }, v1, v2));
+};
+function vecLen2(v) {
+    __PS_MV_REG = [];
+    return vecDot(v, v);
+};
+function computePredDxdt(predXy, preyCoords, c, p) {
+    if (c === undefined) {
+        c = C;
+    };
+    if (p === undefined) {
+        p = P;
+    };
+    var n = preyCoords.length;
+    var z = predXy;
+    __PS_MV_REG = [];
+    return scaleVec(c / n, (s20780 = null, (n === 0 ? (function () {
+        throw "Empty vector sum";
+    })() : null, (function () {
+        var xk;
+        for (var k = 0; k < n; k += 1) {
+            var delta20781 = (xk = preyCoords[k], scaleVec(1 / Math.pow(vecLen2(vec(xk, z)), p / 2), vec(xk, z)));
+            if (s20780 === null) {
+                s20780 = delta20781;
+            } else {
+                s20780 = vecplus(s20780, delta20781);
+            };
+        };
+        var k = null;
+        __PS_MV_REG = [];
+        return s20780;
+    })())));
+};
+function computePreyDxdts(predXy, preyCoords, a, b) {
+    if (a === undefined) {
+        a = A;
+    };
+    if (b === undefined) {
+        b = B;
+    };
+    var n = preyCoords.length;
+    var computePreyDxdt = function (j) {
+        var z = predXy;
+        var xj = preyCoords[j];
+        __PS_MV_REG = [];
+        return vecplus(scaleVec(1 / n, (s20782 = null, (n === 0 ? (function () {
+            throw "Empty vector sum";
+        })() : null, (function () {
+            var xk;
+            for (var k = 0; k < n; k += 1) {
+                var delta20783 = k === j ? [0, 0] : (xk = preyCoords[k], vec(scaleVec(1 / vecLen2(vec(xj, xk)), vec(xj, xk)), scaleVec(a, vec(xj, xk))));
+                if (s20782 === null) {
+                    s20782 = delta20783;
+                } else {
+                    s20782 = vecplus(s20782, delta20783);
+                };
+            };
+            var k = null;
+            __PS_MV_REG = [];
+            return s20782;
+        })()))), scaleVec(b / vecLen2(vec(xj, z)), vec(xj, z)));
+    };
+    __PS_MV_REG = [];
+    return mapIndex(computePreyDxdt, preyCoords.length);
+};
+/**
+ * Convert a 3d color with components
+ *        ranging from 0 to 1 to CSS rgb notation.
+ */
+function colorgreaterthanStr(color) {
+    var comps = mapcar(function (x) {
+        __PS_MV_REG = [];
+        return Math.round(255 * x);
+    }, color);
+    __PS_MV_REG = [];
+    return "rgb(" + comps[0] + "," + comps[1] + "," + comps[2] + ")";
+};
+function clearCanvas(ctx, color) {
+    if (color === undefined) {
+        color = [0.1, 0.1, 0.1];
+    };
+    ctx.fillStyle = colorgreaterthanStr(color);
+    __PS_MV_REG = [];
+    return ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+};
+/** Add a user-adjustable parameter to the page. */
+function extendParamsTable(description, type, callback, value, min, max) {
+    var input = document.createElement("input");
+    var rangeLabel = document.createElement("p");
+    var p = document.createElement(type === "link" ? "a" : "p");
+    var tdLeft = document.createElement("td");
+    var tdRight = document.createElement("td");
+    var tr = document.createElement("tr");
+    var paramsTable = document.getElementById("params-table");
+    if (type === "checkbox") {
+        input.setAttribute("type", "checkbox");
+    } else if (type === "range") {
+        input.setAttribute("type", "range");
+    };
+    if (type === "checkbox") {
+        if (value) {
+            input.setAttribute("checked", "");
+        };
+    } else if (type === "range") {
+        input.setAttribute("value", Math.round(100 * ((value - min) / (max - min))));
+    };
+    if (type === "checkbox") {
+        input.addEventListener("change", function (e) {
+            return callback(e.target.checked);
+        });
+    } else if (type === "link") {
+        p.setAttribute("href", "javascript:;");
+        p.addEventListener("click", function (e) {
+            return callback();
+        });
+    } else if (type === "range") {
+        input.addEventListener("change", function (e) {
+            var sliderValue = e.target.value;
+            var value20784 = min + (sliderValue / 100) * (max - min);
+            rangeLabel.innerHTML = floatgreaterthanStr(value20784);
+            __PS_MV_REG = [];
+            return callback(value20784);
+        });
+        input.setAttribute("step", 0.01);
+        rangeLabel.setAttribute("class", "text zero-top-margin");
+        rangeLabel.innerHTML = floatgreaterthanStr(value);
+    };
+    p.setAttribute("class", "text");
+    p.innerHTML = description;
+    if (type !== "link") {
+        tdLeft.appendChild(input);
+    };
+    if (type === "range") {
+        tdLeft.appendChild(rangeLabel);
+    };
+    tdRight.appendChild(p);
+    tr.appendChild(tdLeft);
+    tr.appendChild(tdRight);
+    __PS_MV_REG = [];
+    return paramsTable.appendChild(tr);
+};
+extendParamsTable("Reset simulation", "link", function () {
+    __PS_MV_REG = [];
+    return initCoords(GAMESTATE);
+});
+extendParamsTable("Lock view to predator", "link", function () {
+    GAMESTATE.lockViewToPredwhat = true;
+    return GAMESTATE.lockViewToPreywhat = false;
+});
+extendParamsTable("Lock view to prey", "link", function () {
+    GAMESTATE.lockViewToPredwhat = false;
+    return GAMESTATE.lockViewToPreywhat = true;
+});
+extendParamsTable("Unlock view", "link", function () {
+    GAMESTATE.lockViewToPredwhat = false;
+    return GAMESTATE.lockViewToPreywhat = false;
+});
+var SIMSPEED = 0.001;
+extendParamsTable("Simulation speed", "range", function (value) {
+    return SIMSPEED = value;
+}, 0.001, 0.0001, 0.0012);
+var NPREY = 40;
+extendParamsTable("N (number of prey)", "range", function (value) {
+    NPREY = value;
+    __PS_MV_REG = [];
+    return initCoords(GAMESTATE);
+}, 40, 1, 500);
+var A = 0.796;
+extendParamsTable("a (swarm->swarm attraction)", "range", function (value) {
+    return A = value;
+}, 0.796, 0, 10);
+var B = 0.708;
+extendParamsTable("b (prey->predator repulsion)", "range", function (value) {
+    return B = value;
+}, 0.708, 0, 10);
+var C = 15;
+extendParamsTable("c (predator->prey attraction)", "range", function (value) {
+    return C = value;
+}, 15, 0, 20);
+var P = 2.1985;
+extendParamsTable("p (predator->prey attraction falloff)", "range", function (value) {
+    return P = value;
+}, 2.1985, 0, 5);
+var SHOWHELP = false;
+extendParamsTable("Show help", "checkbox", function (value) {
+    SHOWHELP = value;
+    var helpTable = document.getElementById("help-table");
+    __PS_MV_REG = [];
+    return helpTable.style.visibility = value ? "visible" : "hidden";
+}, false);
+function getViewLeft(viewWidth, viewXy) {
+    return viewXy[0] - viewWidth / 2;
+};
+function getViewBottom(viewHeight, viewXy) {
+    return viewXy[1] - viewHeight / 2;
+};
+function drawGrid(state, color, width) {
+    if (color === undefined) {
+        color = [0.05, 0.05, 0.05];
+    };
+    if (width === undefined) {
+        width = 0.2;
+    };
+    var state20785 = state;
+    var canvas20786 = state20785.canvas;
+    var ctx = canvas20786.getContext("2d");
+    var viewWidth20787 = state20785.viewWidth;
+    var viewXy20788 = state20785.viewXy;
+    var canvasAspect = canvas20786.width / canvas20786.height;
+    var viewHeight = viewWidth20787 / canvasAspect;
+    var viewLeft = getViewLeft(viewWidth20787, viewXy20788);
+    var viewBottom = getViewBottom(viewHeight, viewXy20788);
+    var drawSeg = function (x, verticalwhat) {
+        if (verticalwhat === undefined) {
+            verticalwhat = true;
+        };
+        ctx.strokeStyle = colorgreaterthanStr(color);
+        ctx.beginPath();
+        if (verticalwhat) {
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, canvas20786.height);
+        } else {
+            ctx.moveTo(0, x);
+            ctx.lineTo(canvas20786.width, x);
+        };
+        __PS_MV_REG = [];
+        return ctx.stroke();
+    };
+    var x0 = Math.ceil(viewLeft / width) * width;
+    var y0 = Math.ceil(viewBottom / width) * width;
+    var x = x0;
+    var y = y0;
+    for (; !(x > viewLeft + viewWidth20787 && y > viewBottom + viewHeight); ) {
+        var form20789 = gameXygreaterthanCanvasXy(state20785, [x, y]);
+        var canvasX = form20789[0];
+        var canvasY = form20789[1];
+        drawSeg(canvasX);
+        drawSeg(canvasY, false);
+        var _js20790 = x + width;
+        var _js20791 = y + width;
+        x = _js20790;
+        y = _js20791;
+    };
+};
+function canvasXygreaterthanGameXy(state, xy) {
+    var state20789 = state;
+    var canvas20790 = state20789.canvas;
+    var ctx = canvas20790.getContext("2d");
+    var viewWidth20791 = state20789.viewWidth;
+    var viewXy20792 = state20789.viewXy;
+    var canvasAspect = canvas20790.width / canvas20790.height;
+    var viewHeight = viewWidth20791 / canvasAspect;
+    var viewLeft = getViewLeft(viewWidth20791, viewXy20792);
+    var viewBottom = getViewBottom(viewHeight, viewXy20792);
+    __PS_MV_REG = [];
+    return [viewLeft + (xy[0] / canvas20790.width) * viewWidth20791, viewBottom + (xy[1] / canvas20790.height) * viewHeight];
+};
+function gameXygreaterthanCanvasXy(state, xy) {
+    var state20793 = state;
+    var canvas20794 = state20793.canvas;
+    var ctx = canvas20794.getContext("2d");
+    var viewWidth20795 = state20793.viewWidth;
+    var viewXy20796 = state20793.viewXy;
+    var canvasAspect = canvas20794.width / canvas20794.height;
+    var viewHeight = viewWidth20795 / canvasAspect;
+    var viewLeft = getViewLeft(viewWidth20795, viewXy20796);
+    var viewBottom = getViewBottom(viewHeight, viewXy20796);
+    __PS_MV_REG = [];
+    return [((xy[0] - viewLeft) / viewWidth20795) * canvas20794.width, ((xy[1] - viewBottom) / viewHeight) * canvas20794.height];
+};
+function drawCircle(state, xy, color, radius) {
+    if (color === undefined) {
+        color = [0.5, 0.5, 0.5];
+    };
+    if (radius === undefined) {
+        radius = 3;
+    };
+    var state20797 = state;
+    var canvas20798 = state20797.canvas;
+    var ctx = canvas20798.getContext("2d");
+    var viewWidth20799 = state20797.viewWidth;
+    var viewXy20800 = state20797.viewXy;
+    var canvasAspect = canvas20798.width / canvas20798.height;
+    var viewHeight = viewWidth20799 / canvasAspect;
+    var viewLeft = getViewLeft(viewWidth20799, viewXy20800);
+    var viewBottom = getViewBottom(viewHeight, viewXy20800);
+    var form20801 = gameXygreaterthanCanvasXy(state20797, xy);
+    var x = form20801[0];
+    var y = form20801[1];
+    ctx.fillStyle = colorgreaterthanStr(color);
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, 2 * Math.PI);
+    __PS_MV_REG = [];
+    return ctx.fill();
+};
+function makePreyCoords(n) {
+    var preyCoords = [];
+    for (var i = 0; i < n; i += 1) {
+        preyCoords.push([Math.random(), Math.random()]);
+    };
+    var i = null;
+    __PS_MV_REG = [];
+    return preyCoords;
+};
+function initCoords(state, nPrey) {
+    if (nPrey === undefined) {
+        nPrey = Math.round(NPREY);
+    };
+    state.predXy = [Math.random(), Math.random()];
+    __PS_MV_REG = [];
+    return state.preyCoords = makePreyCoords(nPrey);
+};
+function initGame(state, canvas, width, height) {
+    if (width === undefined) {
+        width = 800;
+    };
+    if (height === undefined) {
+        height = 400;
+    };
+    state.canvas = canvas;
+    canvas.width = width;
+    canvas.height = height;
+    state.viewWidth = 8;
+    state.viewXy = [0.5, 0.5];
+    state.lockViewToPredwhat = false;
+    state.lockViewToPreywhat = false;
+    initCoords(state);
+    canvas.addEventListener("mousedown", function (e) {
+        return state.lastClickPos = [e.clientX, e.clientY];
+    });
+    canvas.addEventListener("mouseleave", function (e) {
+        return delete state.lastClickPos;
+    });
+    canvas.addEventListener("mouseup", function (e) {
+        return delete state.lastClickPos;
+    });
+    document.addEventListener("keydown", function (e) {
+        if (state.mouseXy !== undefined) {
+            if (e.code == "ControlLeft") {
+                return !state.lockPreywhat ? (state.lockPredwhat = true) : null;
+            } else if (e.code == "ShiftLeft") {
+                return !state.lockPredwhat ? (state.lockPreywhat = true) : null;
+            };
+        };
+    });
+    document.addEventListener("keyup", function (e) {
+        if (state.mouseXy !== undefined) {
+            if (e.code == "ControlLeft") {
+                return state.lockPredwhat = false;
+            } else if (e.code == "ShiftLeft") {
+                return state.lockPreywhat = false;
+            };
+        };
+    });
+    canvas.addEventListener("mousemove", function (e) {
+        var rect = canvas.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var y = e.clientY - rect.top;
+        state.mouseXy = [x, y];
+        if (state.lastClickPos !== undefined) {
+            var form20803 = state.lastClickPos;
+            var x20804 = form20803[0];
+            var y20805 = form20803[1];
+            var deltaViewXy = [x20804 - e.clientX, y20805 - e.clientY];
+            var state20806 = state;
+            var canvas20807 = state20806.canvas;
+            var ctx = canvas20807.getContext("2d");
+            var viewWidth20808 = state20806.viewWidth;
+            var viewXy20809 = state20806.viewXy;
+            var canvasAspect = canvas20807.width / canvas20807.height;
+            var viewHeight = viewWidth20808 / canvasAspect;
+            var viewLeft = getViewLeft(viewWidth20808, viewXy20809);
+            var viewBottom = getViewBottom(viewHeight, viewXy20809);
+            state20806.viewXy = vecplus(state20806.viewXy, vecstar([viewWidth20808 / canvas20807.width, viewHeight / canvas20807.height], deltaViewXy));
+            __PS_MV_REG = [];
+            return state.lastClickPos = [e.clientX, e.clientY];
+        };
+    });
+    __PS_MV_REG = [];
+    return canvas.addEventListener("wheel", function (e) {
+        e.preventDefault();
+        __PS_MV_REG = [];
+        return state.viewWidth < 0.01 ? (state.viewWidth = 0.01) : (state.viewWidth += 0.01 * e.deltaY);
+    });
+};
+function stepGame(state, dt) {
+    var speed = SIMSPEED;
+    var predXy20810 = state.predXy;
+    var preyCoords20811 = state.preyCoords;
+    var preyDxdts = computePreyDxdts(predXy20810, preyCoords20811);
+    if (state.lockPredwhat) {
+        state.predXy = canvasXygreaterthanGameXy(state, state.mouseXy);
+    } else {
+        state.predXy = vecplus(state.predXy, scaleVec(speed * dt, computePredDxdt(predXy20810, preyCoords20811)));
+    };
+    for (var i = 0; i < preyCoords20811.length; i += 1) {
+        if (i === 0 && state.lockPreywhat) {
+            preyCoords20811[i] = canvasXygreaterthanGameXy(state, state.mouseXy);
+        } else {
+            preyCoords20811[i] = vecplus(preyCoords20811[i], scaleVec(speed * dt, preyDxdts[i]));
+        };
+    };
+    if (state.lockViewToPredwhat) {
+        __PS_MV_REG = [];
+        return state.viewXy = (state.viewXy = state.predXy);
+    } else if (state.lockViewToPreywhat && state.preyCoords.length >= 1) {
+        __PS_MV_REG = [];
+        return state.viewXy = (state.viewXy = state.preyCoords[0]);
+    };
+};
+function drawGame(state) {
+    var state20812 = state;
+    var canvas20813 = state20812.canvas;
+    var ctx = canvas20813.getContext("2d");
+    var viewWidth20814 = state20812.viewWidth;
+    var viewXy20815 = state20812.viewXy;
+    var canvasAspect = canvas20813.width / canvas20813.height;
+    var viewHeight = viewWidth20814 / canvasAspect;
+    var viewLeft = getViewLeft(viewWidth20814, viewXy20815);
+    var viewBottom = getViewBottom(viewHeight, viewXy20815);
+    clearCanvas(ctx);
+    drawGrid(state20812);
+    drawCircle(state20812, state20812.predXy, [1, 0, 0]);
+    for (var i = 0; i < state20812.preyCoords.length; i += 1) {
+        if (i === 0 && state20812.lockViewToPreywhat) {
+            drawCircle(state20812, state20812.preyCoords[i], [0, 0, 1]);
+        } else {
+            drawCircle(state20812, state20812.preyCoords[i]);
+        };
+    };
+};
+function runGame(state) {
+    var doFrame = function () {
+        var dt = state.prevTime === undefined ? 0 : getTime() - state.prevTime;
+        state.prevTime = getTime();
+        stepGame(state, dt);
+        drawGame(state);
+        __PS_MV_REG = [];
+        return window.requestAnimationFrame(doFrame);
+    };
+    __PS_MV_REG = [];
+    return window.requestAnimationFrame(doFrame);
+};
+var GAMESTATE = {  };
+initGame(GAMESTATE, document.getElementById("game-canvas"));
+function makeSlide(title, points) {
+    var slide = {  };
+    slide.title = title;
+    slide.points = points;
+    return slide;
+};
+function appendChild(type, classes, body, parent) {
+    var child = document.createElement(type);
+    child.setAttribute("class", classes);
+    child.innerHTML = body;
+    parent.appendChild(child);
+    __PS_MV_REG = [];
+    return child;
+};
+function showSlide(i, slides, divId) {
+    if (divId === undefined) {
+        divId = "slides-div";
+    };
+    var slide = slides[i];
+    var title20816 = slide.title;
+    var points20817 = slide.points;
+    var ul = document.createElement("ul");
+    var div = document.getElementById(divId);
+    div.innerHTML = "";
+    appendChild("p", "text small-font-size", (i + 1) + "/" + slides.length, div);
+    appendChild("h1", "text", title20816, div);
+    for (var point = null, _js_idx20818 = 0; _js_idx20818 < points20817.length; _js_idx20818 += 1) {
+        point = points20817[_js_idx20818];
+        appendChild("p", "text large-font-size", point, appendChild("li", "text", "", ul));
+    };
+    __PS_MV_REG = [];
+    return div.appendChild(ul);
+};
+var SLIDEI = 0;
+var SLIDES = [makeSlide("The paper", ["A minimal model of predator-swarm interactions", "Something something", "nnnnnn"]), makeSlide("Slide 2!", ["aoijdoisajd", "oidjsaoid"])];
+showSlide(0, SLIDES);
+document.addEventListener("keydown", function (e) {
+    if (e.code == "KeyJ") {
+        if (SLIDEI < SLIDES.length - 1) {
+            ++SLIDEI;
+            __PS_MV_REG = [];
+            return showSlide(SLIDEI, SLIDES);
+        };
+    } else if (e.code == "KeyK") {
+        if (SLIDEI > 0) {
+            --SLIDEI;
+            __PS_MV_REG = [];
+            return showSlide(SLIDEI, SLIDES);
+        };
+    };
+});
+  </script>
+</html>
