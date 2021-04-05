@@ -12,7 +12,7 @@
     ;; MISC
 
     (defmacro push (x lst)
-      "Extend LST by the element X."
+      "Extend LST by adding X to the end."
       `((chain ,lst push) ,x))
 
     (defun float->str (x &optional (n-digits 4))
@@ -61,6 +61,19 @@
 	  (setf str (+ str (last args)))
 	  ((chain console log) str))))
 
+    (defun get-time ()
+      "Return the current time in milliseconds."
+      ((chain performance now)))
+
+    (defmacro with-timed-exec (&body body)
+      "Return how long in milliseconds it takes to execute BODY."
+      (let ((start-time (ps-gensym 'start-time)))
+	`(let ((,start-time (get-time)))
+	   ,@body
+	   (msg "Execution time:"
+		(- (get-time) ,start-time)
+		"ms."))))
+
     ;; VECTOR
 
     (defmacro defun-vectorized (name op)
@@ -81,6 +94,14 @@
       (let ((s 0))
 	(dolist (x lst s)
 	  (incf s x))))
+
+    (defmacro do-sum (var count &body body)
+      (let ((s (ps-gensym 's))
+	    (delta (ps-gensym 'delta)))
+	`(let ((,s 0))
+	   (dotimes (,var ,count ,s)
+	     (let ((,delta (progn ,@body)))
+	       (incf ,s ,delta))))))
 
     (defun vec-dot (v1 v2)
       (sum (mapcar (lambda (a b) (* a b)) v1 v2)))
@@ -104,9 +125,6 @@
 		   (vec-incf ,s ,delta)))))))
 
     ;; MODEL
-
-    ;; (defparameter *rk45* (require "./rk45.js"))
-    ;; (msg (chain *rk45* -system))
 
     (defun compute-pred-dxdt (pred-xy prey-coords &optional (c *c*) (p *p*))
       (let ((n (length prey-coords))
@@ -156,10 +174,11 @@
 
     ;; USER-ADJUSTABLE PARAMETERS
 
-    (defun extend-params-table (description type callback-name
+    (defun extend-params-table (description type callback
 				&optional value min max)
       "Add a user-adjustable parameter to the page."
       (let ((input ((chain document create-element) "input"))
+	    (range-label ((chain document create-element) "p"))
 	    (p ((chain document create-element)
 		(if (eq type :link) "a" "p")))
 	    (td-left ((chain document create-element) "td"))
@@ -178,39 +197,34 @@
 	      ((eq type :range)
 	       ((chain input set-attribute) "value"
 		(round (* 100 (/ (- value min) (- max min)))))))
-	;; If the type is range, generate an id for its indicator
-	(when (eq type :range)
-	  (setf label-id (gen-rand-str)))
 	;; Set the callback
 	(cond ((eq type :checkbox)
-	       ((chain input set-attribute) "onchange"
-		(+ callback-name "(this.checked)")))
+	       ((chain input add-event-listener) "change"
+		(lambda (e)
+		  (funcall callback (chain e target checked)))))
 	      ((eq type :link)
 	       ((chain p set-attribute) "href" "javascript:;")
-	       ((chain p set-attribute) "onclick"
-		(+ callback-name "()")))
+	       ((chain p add-event-listener) "click"
+		(lambda (e)
+		  (funcall callback))))
 	      ((eq type :range)
-	       ((chain input set-attribute) "onchange"
-		(+ "x = " min " + " "this.value / 100 * " (- max min) "; "
-		   "document.getElementById(\""
-		   label-id
-		   "\").innerHTML = "
-		   (lisp (ps (float->str x))) "; "
-		   callback-name
-		   "(x);"))
-	       ((chain input set-attribute) "step" 0.01)))
+	       ((chain input add-event-listener) "change"
+		(lambda (e)
+		  (let* ((slider-value (chain e target value))
+			 (value (+ min (* (/ slider-value 100) (- max min)))))
+		    (setf (inner-html range-label) (float->str value))
+		    (funcall callback value))))
+	       ((chain input set-attribute) "step" 0.01)
+	       ((chain range-label set-attribute) "class" "text zero-top-margin")
+	       (setf (inner-html range-label) (float->str value))))
 	((chain p set-attribute) "class" "text")
 	(setf (inner-html p) description)
 	;; Link the elements together
 	(unless (eq type :link)
 	  ((chain td-left append-child) input))
-	;; For range type, add an indicator under the slider
+	;; For range type, add the label under the slider
 	(when (eq type :range)
-	  (let ((label ((chain document create-element) "p")))
-	    ((chain label set-attribute) "id" label-id)
-	    ((chain label set-attribute) "class" "text no-top-margin")
-	    (setf (inner-html label) (float->str value))
-	    ((chain td-left append-child) label)))
+	  ((chain td-left append-child) range-label))
 	((chain td-right append-child) p)
 	((chain tr append-child) td-left)
 	((chain tr append-child) td-right)
@@ -218,34 +232,29 @@
 
     (defmacro def-param ((name description type &key var value min max)
 			 &body body)
-      "Add a user-adjustable parameter to the page
-       that is accessible by the rest of the program."
-      (let ((callback-name (ps-gensym 'callback-name)))
-	(cond ((eq type :checkbox)
-	       `(progn
-		  (defparameter ,name ,value)
-		  (defun ,callback-name (,var)
-		    (setf ,name ,var)
-		    ,@body)
-		  (extend-params-table ,description ,type ',callback-name
-				       ,value)))
-	      ((eq type :link)
-	       `(progn
-		  (defun ,callback-name ()
-		    ,@body)
-		  (extend-params-table ,description ,type ',callback-name)))
-	      ((eq type :range)
-	       `(progn
-		  (defparameter ,name ,value)
-		  (defun ,callback-name (,var)
-		    (setf ,name ,var)
-		    ,@body)
-		  (extend-params-table ,description ,type ',callback-name
-				       ,value ,min ,max)))
-	      (t `(throw (+ "User-adjustable parameter "
-			    ',name
-			    " has an unrecognized type: "
-			    ',type))))))
+      "Add a user-adjustable parameter to the page, and
+       make it accessible by the rest of the program."
+      (cond ((eq type :checkbox)
+	     `(progn
+		(defparameter ,name ,value)
+		(extend-params-table ,description ,type (lambda (,var)
+							  (setf ,name ,var)
+							  ,@body)
+				     ,value)))
+	    ((eq type :link)
+	     `(progn
+		(extend-params-table ,description ,type (lambda () ,@body))))
+	    ((eq type :range)
+	     `(progn
+		(defparameter ,name ,value)
+		(extend-params-table ,description ,type (lambda (,var)
+							  (setf ,name ,var)
+							  ,@body)
+				     ,value ,min ,max)))
+	    (t `(throw (+ "User-adjustable parameter "
+			  ',name
+			  " has an unrecognized type: "
+			  ',type)))))
 
     (def-param (*reset-sim* "Reset simulation" :link)
 	(init-coords *game-state*))
@@ -337,18 +346,18 @@
 		((and (> x (+ view-left view-width))
 		      (> y (+ view-bottom view-height))))
 	      (let-xy canvas-x canvas-y
-		      (xy->canvas-xy state (list x y))
+		      (game-xy->canvas-xy state (list x y))
 		      (draw-seg canvas-x)
-		      (draw-seg canvas-y nil)))))))
+		      (draw-seg canvas-y f)))))))
 
-    (defun canvas-xy->xy (state xy)
+    (defun canvas-xy->game-xy (state xy)
       (with-game-state state
 	(list (+ view-left
 		 (* (/ (elt xy 0) (chain canvas width)) view-width))
 	      (+ view-bottom
 		 (* (/ (elt xy 1) (chain canvas height)) view-height)))))
 
-    (defun xy->canvas-xy (state xy)
+    (defun game-xy->canvas-xy (state xy)
       (with-game-state state
 	(list (* (/ (- (elt xy 0) view-left) view-width)
 		 (chain canvas width))
@@ -357,7 +366,7 @@
 
     (defun draw-circle (state xy &optional (color '(0.5 0.5 0.5)) (radius 3))
       (with-game-state state
-	(let-xy x y (xy->canvas-xy state xy)
+	(let-xy x y (game-xy->canvas-xy state xy)
 		(setf (chain ctx fill-style) (color->str color))
 		(canvas-cmd begin-path)
 		(canvas-cmd arc x y radius 0 (* 2 pi))
@@ -447,9 +456,6 @@
 	     (setf (chain state view-width) 0.01)
 	     (incf (chain state view-width) (* 0.01 (chain e delta-y)))))))
 
-    (defun get-time ()
-      ((chain performance now)))
-
     (defun step-game (state dt)
       (let* ((speed *sim-speed*)
 	     (pred-xy (getprop state 'pred-xy))
@@ -458,7 +464,7 @@
 	;; Update the predator position
 	(if (chain state lock-pred?)
 	    (setf (chain state pred-xy)
-		  (canvas-xy->xy state (chain state mouse-xy)))
+		  (canvas-xy->game-xy state (chain state mouse-xy)))
 	    (vec-incf (getprop state 'pred-xy)
 		      (scale-vec (* speed dt)
 				 (compute-pred-dxdt pred-xy prey-coords))))
@@ -466,7 +472,7 @@
 	(dotimes (i (length prey-coords))
 	  (if (and (= i 0) (chain state lock-prey?))
 	      (setf (elt prey-coords i)
-		    (canvas-xy->xy state (chain state mouse-xy)))
+		    (canvas-xy->game-xy state (chain state mouse-xy)))
 	      (vec-incf (elt prey-coords i)
 			(scale-vec (* speed dt) (elt prey-dxdts i)))))
 	;; If the view is locked, update the view position
@@ -504,7 +510,18 @@
 
     (defparameter *game-state* (create))
     (init-game *game-state* ((chain document get-element-by-id) "game-canvas"))
-    (run-game *game-state*)))
+    ;; (run-game *game-state*)
+
+    ;; DELETE ME
+
+    (msg "Ok, let's try some wasm stuff")
+
+    ;; (setf (chain -module on-runtime-initialized)
+    ;; 	  (lambda ()
+    ;; 	    (let ((version ((chain -module cwrap) "get_version" "number" '())))
+    ;; 	      nil)))
+
+    ))
 
 (defparameter *html*
   (with-html-output-to-string (s nil :indent t)
@@ -554,35 +571,30 @@
 		     (:td (:p :class "text" "Click and drag")))))
      (:script :type "text/javascript" 
 	      (str (ps (lisp *ps-lisp-library*))))
-     (:script :src "js.js"))))
+     (:script :src "solver.js")
+     (:script :type "text/javascript" (str *js*)))))
 
-(defun save-str-to-file (str path)
-  (with-open-file (s path :direction :output :if-exists :supersede)
-    (write-sequence str s)))
+;; (defun save-str-to-file (str path)
+;;   (with-open-file (s path :direction :output :if-exists :supersede)
+;;     (write-sequence str s)))
 
 ;; Save the js to the disk
-(save-str-to-file *js* "www/js.js")
+;; (save-str-to-file *js* "www/js.js")
 ;; Use browserify so that we can use rk45js
-(uiop:run-program "browserify www/js.js -o www/bundle.js" :output t)
-(save-str-to-file *html* "www/index.html")
+;; (uiop:run-program "browserify www/js.js -o www/bundle.js" :output t)
+;; (save-str-to-file *html* "www/index.html")
 
-(define-easy-handler (home :uri "/") ()
-  *html*)
+(define-easy-handler (home :uri "/") () *html*)
+
+(define-easy-handler (solver-js :uri "/solver.js") ()
+  (uiop:read-file-string "solver/solver.js"))
+
+(define-easy-handler (solver-wasm :uri "/solver.wasm") ()
+  (setf (content-type*) "application/wasm")
+  (uiop:read-file-string "solver/solver.wasm"))
 
 (defparameter *server*
   (start (make-instance 'easy-acceptor
 			:address "0.0.0.0" ;; localhost
 			:document-root #p"www/"
 			:port 8080)))
-
-"
-find out why using bundle.js doesn't work
-use rk45js (see top of MODEL section)
-You shouldn't be able to control the prey while the
-  view is locked to the prey. Similarly for predator.
-add a toggle for the lock view
-add a play/pause button
-add presets to look at the various regimes
-pressing ctrl and shift with the cursor
-  outside the canvas shouldn't do anything
-"
