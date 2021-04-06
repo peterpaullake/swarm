@@ -18,4 +18,6 @@ SLIDE 4
 
 So now I'm going to introduce the model from the paper. We're going to look at a more general version a little later on where we trade away some of the simplicity for more accuracy, but for now we're just sticking to the simple version where it's easy to find the steady states. And this simple version is actually pretty good. It captures a lot of the things you see in the physical situation.
 
-So we're imagining that our prey and our predator live in 2D on the complex plane. I guess if you wanted to think about like a flock of birds or a school of fish you might want to extend this to 3D, but we'll stick with 2D because it's easy to draw.
+So we're imagining that our prey and our predator live in 2D on the complex plane. You could extend it to 3D if you wanted to think about a flock of birds or some fish which live very much in 3D, but we'll stick with 2D because it's easy to draw.
+
+So we're saying that we have N prey, and x_j(t) is the position of the jth prey at time t, and z(t) is the position of the predator at time t.

@@ -546,7 +546,8 @@
 			(append-child "li" "text" "" ul)))
 	((chain div append-child) ul)
 	;; Call mathjax to do math typesetting
-	((chain -math-jax typeset))))
+	(unless (eq (typeof -math-jax) "undefined")
+	  ((chain -math-jax typeset)))))
 
     (defparameter *slide-i* 0)
     (defparameter *slides*
@@ -560,6 +561,14 @@
 		     "Zebras vs lion, etc"
 		     "The prey swarm while trying to get away"))
        (make-slide "The model"
+		   (list (+ "Let \\(\\mathbf{x}_j(t) \\in \\mathbb{R}^2 \\) "
+			    "be the position of the "
+			    "\\(j^{\\text{th}}\\) "
+			    "prey at time \\(t\\)")
+			 (+ "Let \\(\\mathbf{z}(t) \\in \\mathbb{R}^2 \\) "
+			    "be the position of the "
+			    "predator at time \\(t\\)")))
+       (make-slide "???"
 		   '("\\(N\\) prey live on \\(R^2\\)"
 		     "One predator lives on \\(R^2\\)"
 		     "The predator is trying to catch the prey"))
@@ -653,7 +662,7 @@
 			:port 8080)))
 
 "
-continue writing slide 4 script
+introduce the model the same way the paper does (f = ma)
 fix mathjax blocking issue (maybe wait until it's loaded before
   drawing a slide?)
 try wasm stuff
