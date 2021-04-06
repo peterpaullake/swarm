@@ -16,8 +16,10 @@ So basically what this paper does is it introduces a model of this predator-swar
 
 SLIDE 4
 
-So now I'm going to introduce the model from the paper. We're going to look at a more general version a little later on where we trade away some of the simplicity for more accuracy, but for now we're just sticking to the simple version where it's easy to find the steady states. And this simple version is actually pretty good. It captures a lot of the things you see in the physical situation.
+So now I'm going to introduce the model from the paper. We're going to look at a more general version a little later on where we will trade away some of the simplicity in exchange for more accuracy, but for now we're just sticking to the simple version where it's easy to find the steady states. And this simple version is actually pretty good. It captures a lot of the things you see in the physical situation as we'll see later in the numerical simulation.
 
-So we're imagining that our prey and our predator live in 2D on the complex plane. You could extend it to 3D if you wanted to think about a flock of birds or some fish which live very much in 3D, but we'll stick with 2D because it's easy to draw.
+So we're imagining that our prey and our predator live in 2D on the complex plane. You could extend it to 3D if you wanted to think about a flock of birds or some fish or something that lives more in 3D, but we'll stick with 2D because it's easy to draw.
 
-So we're saying that we have N prey, and x_j(t) is the position of the jth prey at time t, and z(t) is the position of the predator at time t.
+So we're saying that we have N many prey, and that x_j(t) is the position of the jth prey at time t, and z(t) is the position of the predator at time t. And we're going to imagine these animals as point masses that exert forces on one another. So for example the predator should push prey away, and the prey should attract the predator. And it's probably reasonable to say that if you're an animal running around, that you experience a kind of friction in the opposite direction to where you're running, and we're saying that the magnitude of that friction should be proportional to the speed.
+
+So then we end up with this general model.

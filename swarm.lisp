@@ -559,15 +559,24 @@
        (make-slide "Motivation"
 		   '("Group of prey being hunted by a predator"
 		     "Zebras vs lion, etc"
-		     "The prey swarm while trying to get away"))
+		     "The prey swarm while trying to get away."))
        (make-slide "The model"
 		   (list (+ "Let \\(\\mathbf{x}_j(t) \\in \\mathbb{R}^2 \\) "
 			    "be the position of the "
 			    "\\(j^{\\text{th}}\\) "
-			    "prey at time \\(t\\)")
+			    "prey at time \\(t\\).")
 			 (+ "Let \\(\\mathbf{z}(t) \\in \\mathbb{R}^2 \\) "
 			    "be the position of the "
-			    "predator at time \\(t\\)")))
+			    "predator at time \\(t\\).")
+			 (+ "Assume the prey and predator "
+			    "obey Newton's second law: "
+			    "\\(\\mathbf{F} = m \\mathbf{a}\\), "
+			    "and that the prey and predator "
+			    "have friction with the ground.")
+			 (+ "\\(m_j \\frac{d^2 \\mathbf{x}_j}{dt^2} "
+			    " = \\mathbf{F}_{\\text{prey$\\to$prey}_j} "
+			    " + \\mathbf{F}_{\\text{predator$\\to$prey}_j} "
+			    " - \\mu \\frac{d \\mathbf{x}_j}{\dt} \\),")))
        (make-slide "???"
 		   '("\\(N\\) prey live on \\(R^2\\)"
 		     "One predator lives on \\(R^2\\)"
