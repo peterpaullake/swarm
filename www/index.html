@@ -58,82 +58,23 @@ td {
   clear: both;
 }
 
-    </style><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
+    </style>
   </head>
   <body class='dark-bg'>
-    <a class='text' href='https://arxiv.org/abs/1403.3250'>Paper
-    </a>
-    <br />
-    <a class='text' href='https://github.com/peterpaullake/swarm'>GitHub repo
-    </a>
-    <br />
-    <br />
     <div class='row light-bg'>
       <div id='slides-div' class='column'></div>
       <div id='media-div' class='column'>
-        <img src='swarm-01.png' />
-        <table id='params-table' style='visibility: hidden;'></table>
+        <canvas id='game-canvas'></canvas>
+        <table id='params-table'></table>
       </div>
     </div>
-    <canvas id='game-canvas'></canvas>
-    <table id='help-table' style='visibility: hidden;'>
-      <tr>
-        <td>
-          <h2 class='text'>Help
-          </h2>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>
-          <p class='text'>Control predator
-          </p>
-        </td>
-        <td>
-          <p class='text'>Hold ctrl
-          </p>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <p class='text'>Control prey
-          </p>
-        </td>
-        <td>
-          <p class='text'>Hold shift
-          </p>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <p class='text'>Zoom in/out
-          </p>
-        </td>
-        <td>
-          <p class='text'>Scroll
-          </p>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <p class='text'>Move viewport
-          </p>
-        </td>
-        <td>
-          <p class='text'>Click and drag
-          </p>
-        </td>
-      </tr>
-    </table>
   </body>
   <script type='text/javascript'>function mapcar(fun) {
     var arrs = Array.prototype.slice.call(arguments, 1);
     var resultArray = new Array();
     if (1 === arrs.length) {
-        for (var element = null, _js_arrvar7378 = arrs[0], _js_idx7377 = 0; _js_idx7377 < _js_arrvar7378.length; _js_idx7377 += 1) {
-            element = _js_arrvar7378[_js_idx7377];
+        for (var element = null, _js_arrvar7584 = arrs[0], _js_idx7583 = 0; _js_idx7583 < _js_arrvar7584.length; _js_idx7583 += 1) {
+            element = _js_arrvar7584[_js_idx7583];
             resultArray.push(fun(element));
         };
     } else {
@@ -150,8 +91,8 @@ td {
 /** Call FN on each element in ARR, replace element with the return value. */
 function mapInto(fn, arr) {
     var idx = 0;
-    for (var el = null, _js_idx7379 = 0; _js_idx7379 < arr.length; _js_idx7379 += 1) {
-        el = arr[_js_idx7379];
+    for (var el = null, _js_idx7585 = 0; _js_idx7585 < arr.length; _js_idx7585 += 1) {
+        el = arr[_js_idx7585];
         arr[idx] = fn(el);
         idx += 1;
     };
@@ -162,8 +103,8 @@ function mapInto(fn, arr) {
 function map(fn, arr) {
     var idx = 0;
     var result = [];
-    for (var el = null, _js_idx7380 = 0; _js_idx7380 < arr.length; _js_idx7380 += 1) {
-        el = arr[_js_idx7380];
+    for (var el = null, _js_idx7586 = 0; _js_idx7586 < arr.length; _js_idx7586 += 1) {
+        el = arr[_js_idx7586];
         result[idx] = fn(el);
         idx += 1;
     };
@@ -172,8 +113,8 @@ function map(fn, arr) {
 };
 /** Check if ITEM is a member of ARR. */
 function member(item, arr) {
-    for (var el = null, _js_idx7381 = 0; _js_idx7381 < arr.length; _js_idx7381 += 1) {
-        el = arr[_js_idx7381];
+    for (var el = null, _js_idx7587 = 0; _js_idx7587 < arr.length; _js_idx7587 += 1) {
+        el = arr[_js_idx7587];
         if (el === item) {
             return true;
         };
@@ -184,8 +125,8 @@ function member(item, arr) {
 function setDifference(arr, arrToSub) {
     var idx = 0;
     var result = [];
-    for (var el = null, _js_idx7382 = 0; _js_idx7382 < arr.length; _js_idx7382 += 1) {
-        el = arr[_js_idx7382];
+    for (var el = null, _js_idx7588 = 0; _js_idx7588 < arr.length; _js_idx7588 += 1) {
+        el = arr[_js_idx7588];
         if (!member(el, arrToSub)) {
             result[idx] = el;
             idx += 1;
@@ -204,9 +145,9 @@ function reduce(func, list, init) {
 function nconc(arr) {
     var arrs = Array.prototype.slice.call(arguments, 1);
     if (arr && arr.length > 0) {
-        var _js7384 = arrs.length;
-        for (var _js7383 = 0; _js7383 < _js7384; _js7383 += 1) {
-            var other = arrs[_js7383];
+        var _js7590 = arrs.length;
+        for (var _js7589 = 0; _js7589 < _js7590; _js7589 += 1) {
+            var other = arrs[_js7589];
             if (other && other.length > 0) {
                 arr["splice"]["apply"](arr, [arr.length, other.length].concat(other));
             };
@@ -265,8 +206,8 @@ function msg() {
         return lst[lst.length - 1];
     };
     var str = "";
-    for (var arg = null, _js_arrvar7330 = butlast(args), _js_idx7329 = 0; _js_idx7329 < _js_arrvar7330.length; _js_idx7329 += 1) {
-        arg = _js_arrvar7330[_js_idx7329];
+    for (var arg = null, _js_arrvar7541 = butlast(args), _js_idx7540 = 0; _js_idx7540 < _js_arrvar7541.length; _js_idx7540 += 1) {
+        arg = _js_arrvar7541[_js_idx7540];
         str = str + arg + " ";
     };
     str += last(args);
@@ -278,23 +219,23 @@ function getTime() {
     __PS_MV_REG = [];
     return performance.now();
 };
-function vecplus(v1_7331, v2_7332) {
+function vecplus(v1_7542, v2_7543) {
     __PS_MV_REG = [];
     return mapcar(function (a, b) {
         return a + b;
-    }, v1_7331, v2_7332);
+    }, v1_7542, v2_7543);
 };
-function vec(v1_7333, v2_7334) {
+function vec(v1_7544, v2_7545) {
     __PS_MV_REG = [];
     return mapcar(function (a, b) {
         return a - b;
-    }, v1_7333, v2_7334);
+    }, v1_7544, v2_7545);
 };
-function vecstar(v1_7335, v2_7336) {
+function vecstar(v1_7546, v2_7547) {
     __PS_MV_REG = [];
     return mapcar(function (a, b) {
         return a * b;
-    }, v1_7335, v2_7336);
+    }, v1_7546, v2_7547);
 };
 function scaleVec(a, v) {
     __PS_MV_REG = [];
@@ -304,8 +245,8 @@ function scaleVec(a, v) {
 };
 function sum(lst) {
     var s = 0;
-    for (var x = null, _js_idx7337 = 0; _js_idx7337 < lst.length; _js_idx7337 += 1) {
-        x = lst[_js_idx7337];
+    for (var x = null, _js_idx7548 = 0; _js_idx7548 < lst.length; _js_idx7548 += 1) {
+        x = lst[_js_idx7548];
         s += x;
     };
     var x = null;
@@ -321,64 +262,18 @@ function vecLen2(v) {
     __PS_MV_REG = [];
     return vecDot(v, v);
 };
-function computePredDxdt(predXy, preyCoords, c, p) {
-    if (c === undefined) {
-        c = C;
-    };
-    if (p === undefined) {
-        p = P;
-    };
-    var n = preyCoords.length;
-    var z = predXy;
-    __PS_MV_REG = [];
-    return scaleVec(c / n, (s7338 = null, (n === 0 ? (function () {
-        throw "Empty vector sum";
-    })() : null, (function () {
-        var xk;
-        for (var k = 0; k < n; k += 1) {
-            var delta7339 = (xk = preyCoords[k], scaleVec(1 / Math.pow(vecLen2(vec(xk, z)), p / 2), vec(xk, z)));
-            if (s7338 === null) {
-                s7338 = delta7339;
-            } else {
-                s7338 = vecplus(s7338, delta7339);
-            };
-        };
-        var k = null;
-        __PS_MV_REG = [];
-        return s7338;
-    })())));
+function computeCarDxdts(coords) {
+    return here;
 };
-function computePreyDxdts(predXy, preyCoords, a, b) {
-    if (a === undefined) {
-        a = A;
+function fitCanvasToContainer(canvas, height) {
+    canvas.style.width = "100%";
+    canvas.width = canvas.offsetWidth;
+    if (height === undefined) {
+        canvas.style.height = "100%";
+        return canvas.height = canvas.offsetHeight;
+    } else {
+        return canvas.height = height;
     };
-    if (b === undefined) {
-        b = B;
-    };
-    var n = preyCoords.length;
-    var computePreyDxdt = function (j) {
-        var z = predXy;
-        var xj = preyCoords[j];
-        __PS_MV_REG = [];
-        return vecplus(scaleVec(1 / n, (s7340 = null, (n === 0 ? (function () {
-            throw "Empty vector sum";
-        })() : null, (function () {
-            var xk;
-            for (var k = 0; k < n; k += 1) {
-                var delta7341 = k === j ? [0, 0] : (xk = preyCoords[k], vec(scaleVec(1 / vecLen2(vec(xj, xk)), vec(xj, xk)), scaleVec(a, vec(xj, xk))));
-                if (s7340 === null) {
-                    s7340 = delta7341;
-                } else {
-                    s7340 = vecplus(s7340, delta7341);
-                };
-            };
-            var k = null;
-            __PS_MV_REG = [];
-            return s7340;
-        })()))), scaleVec(b / vecLen2(vec(xj, z)), vec(xj, z)));
-    };
-    __PS_MV_REG = [];
-    return mapIndex(computePreyDxdt, preyCoords.length);
 };
 /**
  * Convert a 3d color with components
@@ -433,10 +328,10 @@ function extendParamsTable(description, type, callback, value, min, max) {
     } else if (type === "range") {
         input.addEventListener("change", function (e) {
             var sliderValue = e.target.value;
-            var value7342 = min + (sliderValue / 100) * (max - min);
-            rangeLabel.innerHTML = floatgreaterthanStr(value7342);
+            var value7549 = min + (sliderValue / 100) * (max - min);
+            rangeLabel.innerHTML = floatgreaterthanStr(value7549);
             __PS_MV_REG = [];
-            return callback(value7342);
+            return callback(value7549);
         });
         input.setAttribute("step", 0.01);
         rangeLabel.setAttribute("class", "text zero-top-margin");
@@ -456,55 +351,24 @@ function extendParamsTable(description, type, callback, value, min, max) {
     __PS_MV_REG = [];
     return paramsTable.appendChild(tr);
 };
+var PAUSED = true;
+extendParamsTable("Paused", "checkbox", function (value) {
+    return PAUSED = value;
+}, true);
 extendParamsTable("Reset simulation", "link", function () {
     __PS_MV_REG = [];
     return initCoords(GAMESTATE);
-});
-extendParamsTable("Lock view to predator", "link", function () {
-    GAMESTATE.lockViewToPredwhat = true;
-    return GAMESTATE.lockViewToPreywhat = false;
-});
-extendParamsTable("Lock view to prey", "link", function () {
-    GAMESTATE.lockViewToPredwhat = false;
-    return GAMESTATE.lockViewToPreywhat = true;
-});
-extendParamsTable("Unlock view", "link", function () {
-    GAMESTATE.lockViewToPredwhat = false;
-    return GAMESTATE.lockViewToPreywhat = false;
 });
 var SIMSPEED = 0.001;
 extendParamsTable("Simulation speed", "range", function (value) {
     return SIMSPEED = value;
 }, 0.001, 0.0001, 0.0012);
-var NPREY = 40;
-extendParamsTable("N (number of prey)", "range", function (value) {
-    NPREY = value;
+var NCARS = 6;
+extendParamsTable("N (number of cars)", "range", function (value) {
+    NCARS = value;
     __PS_MV_REG = [];
     return initCoords(GAMESTATE);
-}, 40, 1, 500);
-var A = 0.796;
-extendParamsTable("a (swarm->swarm attraction)", "range", function (value) {
-    return A = value;
-}, 0.796, 0, 10);
-var B = 0.708;
-extendParamsTable("b (prey->predator repulsion)", "range", function (value) {
-    return B = value;
-}, 0.708, 0, 10);
-var C = 15;
-extendParamsTable("c (predator->prey attraction)", "range", function (value) {
-    return C = value;
-}, 15, 0, 20);
-var P = 2.1985;
-extendParamsTable("p (predator->prey attraction falloff)", "range", function (value) {
-    return P = value;
-}, 2.1985, 0, 5);
-var SHOWHELP = false;
-extendParamsTable("Show help", "checkbox", function (value) {
-    SHOWHELP = value;
-    var helpTable = document.getElementById("help-table");
-    __PS_MV_REG = [];
-    return helpTable.style.visibility = value ? "visible" : "hidden";
-}, false);
+}, 6, 1, 500);
 function getViewLeft(viewWidth, viewXy) {
     return viewXy[0] - viewWidth / 2;
 };
@@ -518,15 +382,15 @@ function drawGrid(state, color, width) {
     if (width === undefined) {
         width = 0.2;
     };
-    var state7343 = state;
-    var canvas7344 = state7343.canvas;
-    var ctx = canvas7344.getContext("2d");
-    var viewWidth7345 = state7343.viewWidth;
-    var viewXy7346 = state7343.viewXy;
-    var canvasAspect = canvas7344.width / canvas7344.height;
-    var viewHeight = viewWidth7345 / canvasAspect;
-    var viewLeft = getViewLeft(viewWidth7345, viewXy7346);
-    var viewBottom = getViewBottom(viewHeight, viewXy7346);
+    var state7550 = state;
+    var canvas7551 = state7550.canvas;
+    var ctx = canvas7551.getContext("2d");
+    var viewWidth7552 = state7550.viewWidth;
+    var viewXy7553 = state7550.viewXy;
+    var canvasAspect = canvas7551.width / canvas7551.height;
+    var viewHeight = viewWidth7552 / canvasAspect;
+    var viewLeft = getViewLeft(viewWidth7552, viewXy7553);
+    var viewBottom = getViewBottom(viewHeight, viewXy7553);
     var drawSeg = function (x, verticalwhat) {
         if (verticalwhat === undefined) {
             verticalwhat = true;
@@ -535,10 +399,10 @@ function drawGrid(state, color, width) {
         ctx.beginPath();
         if (verticalwhat) {
             ctx.moveTo(x, 0);
-            ctx.lineTo(x, canvas7344.height);
+            ctx.lineTo(x, canvas7551.height);
         } else {
             ctx.moveTo(0, x);
-            ctx.lineTo(canvas7344.width, x);
+            ctx.lineTo(canvas7551.width, x);
         };
         __PS_MV_REG = [];
         return ctx.stroke();
@@ -547,43 +411,43 @@ function drawGrid(state, color, width) {
     var y0 = Math.ceil(viewBottom / width) * width;
     var x = x0;
     var y = y0;
-    for (; !(x > viewLeft + viewWidth7345 && y > viewBottom + viewHeight); ) {
-        var form7347 = gameXygreaterthanCanvasXy(state7343, [x, y]);
-        var canvasX = form7347[0];
-        var canvasY = form7347[1];
+    for (; !(x > viewLeft + viewWidth7552 && y > viewBottom + viewHeight); ) {
+        var form7554 = gameXygreaterthanCanvasXy(state7550, [x, y]);
+        var canvasX = form7554[0];
+        var canvasY = form7554[1];
         drawSeg(canvasX);
         drawSeg(canvasY, false);
-        var _js7348 = x + width;
-        var _js7349 = y + width;
-        x = _js7348;
-        y = _js7349;
+        var _js7555 = x + width;
+        var _js7556 = y + width;
+        x = _js7555;
+        y = _js7556;
     };
 };
 function canvasXygreaterthanGameXy(state, xy) {
-    var state7347 = state;
-    var canvas7348 = state7347.canvas;
-    var ctx = canvas7348.getContext("2d");
-    var viewWidth7349 = state7347.viewWidth;
-    var viewXy7350 = state7347.viewXy;
-    var canvasAspect = canvas7348.width / canvas7348.height;
-    var viewHeight = viewWidth7349 / canvasAspect;
-    var viewLeft = getViewLeft(viewWidth7349, viewXy7350);
-    var viewBottom = getViewBottom(viewHeight, viewXy7350);
+    var state7554 = state;
+    var canvas7555 = state7554.canvas;
+    var ctx = canvas7555.getContext("2d");
+    var viewWidth7556 = state7554.viewWidth;
+    var viewXy7557 = state7554.viewXy;
+    var canvasAspect = canvas7555.width / canvas7555.height;
+    var viewHeight = viewWidth7556 / canvasAspect;
+    var viewLeft = getViewLeft(viewWidth7556, viewXy7557);
+    var viewBottom = getViewBottom(viewHeight, viewXy7557);
     __PS_MV_REG = [];
-    return [viewLeft + (xy[0] / canvas7348.width) * viewWidth7349, viewBottom + (xy[1] / canvas7348.height) * viewHeight];
+    return [viewLeft + (xy[0] / canvas7555.width) * viewWidth7556, viewBottom + (xy[1] / canvas7555.height) * viewHeight];
 };
 function gameXygreaterthanCanvasXy(state, xy) {
-    var state7351 = state;
-    var canvas7352 = state7351.canvas;
-    var ctx = canvas7352.getContext("2d");
-    var viewWidth7353 = state7351.viewWidth;
-    var viewXy7354 = state7351.viewXy;
-    var canvasAspect = canvas7352.width / canvas7352.height;
-    var viewHeight = viewWidth7353 / canvasAspect;
-    var viewLeft = getViewLeft(viewWidth7353, viewXy7354);
-    var viewBottom = getViewBottom(viewHeight, viewXy7354);
+    var state7558 = state;
+    var canvas7559 = state7558.canvas;
+    var ctx = canvas7559.getContext("2d");
+    var viewWidth7560 = state7558.viewWidth;
+    var viewXy7561 = state7558.viewXy;
+    var canvasAspect = canvas7559.width / canvas7559.height;
+    var viewHeight = viewWidth7560 / canvasAspect;
+    var viewLeft = getViewLeft(viewWidth7560, viewXy7561);
+    var viewBottom = getViewBottom(viewHeight, viewXy7561);
     __PS_MV_REG = [];
-    return [((xy[0] - viewLeft) / viewWidth7353) * canvas7352.width, ((xy[1] - viewBottom) / viewHeight) * canvas7352.height];
+    return [((xy[0] - viewLeft) / viewWidth7560) * canvas7559.width, ((xy[1] - viewBottom) / viewHeight) * canvas7559.height];
 };
 function drawCircle(state, xy, color, radius) {
     if (color === undefined) {
@@ -592,18 +456,18 @@ function drawCircle(state, xy, color, radius) {
     if (radius === undefined) {
         radius = 3;
     };
-    var state7355 = state;
-    var canvas7356 = state7355.canvas;
-    var ctx = canvas7356.getContext("2d");
-    var viewWidth7357 = state7355.viewWidth;
-    var viewXy7358 = state7355.viewXy;
-    var canvasAspect = canvas7356.width / canvas7356.height;
-    var viewHeight = viewWidth7357 / canvasAspect;
-    var viewLeft = getViewLeft(viewWidth7357, viewXy7358);
-    var viewBottom = getViewBottom(viewHeight, viewXy7358);
-    var form7359 = gameXygreaterthanCanvasXy(state7355, xy);
-    var x = form7359[0];
-    var y = form7359[1];
+    var state7562 = state;
+    var canvas7563 = state7562.canvas;
+    var ctx = canvas7563.getContext("2d");
+    var viewWidth7564 = state7562.viewWidth;
+    var viewXy7565 = state7562.viewXy;
+    var canvasAspect = canvas7563.width / canvas7563.height;
+    var viewHeight = viewWidth7564 / canvasAspect;
+    var viewLeft = getViewLeft(viewWidth7564, viewXy7565);
+    var viewBottom = getViewBottom(viewHeight, viewXy7565);
+    var form7566 = gameXygreaterthanCanvasXy(state7562, xy);
+    var x = form7566[0];
+    var y = form7566[1];
     ctx.fillStyle = colorgreaterthanStr(color);
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, 2 * Math.PI);
@@ -619,29 +483,36 @@ function makePreyCoords(n) {
     __PS_MV_REG = [];
     return preyCoords;
 };
-function initCoords(state, nPrey) {
-    if (nPrey === undefined) {
-        nPrey = Math.round(NPREY);
+function initCoords(state, nCars) {
+    if (nCars === undefined) {
+        nCars = Math.round(NCARS);
     };
-    state.predXy = [Math.random(), Math.random()];
-    __PS_MV_REG = [];
-    return state.preyCoords = makePreyCoords(nPrey);
+    state.coords = [];
+    for (var i = 0; i < nCars; i += 1) {
+        state.coords.push(0.5 * i);
+        state.coords.push(0);
+    };
 };
-function initGame(state, canvas, width, height) {
-    if (width === undefined) {
-        width = 800;
-    };
+function initGame(state, canvas, height) {
     if (height === undefined) {
-        height = 400;
+        height = 300;
     };
     state.canvas = canvas;
-    canvas.width = width;
-    canvas.height = height;
+    fitCanvasToContainer(canvas, height);
     state.viewWidth = 8;
     state.viewXy = [0.5, 0.5];
-    state.lockViewToPredwhat = false;
-    state.lockViewToPreywhat = false;
     initCoords(state);
+    document.addEventListener("keydown", function (e) {
+        if (e.code == "KeyH") {
+            msg("Left");
+            __PS_MV_REG = [];
+            return GAMESTATE.leftwhat = true;
+        } else if (e.code == "KeyL") {
+            msg("Right");
+            __PS_MV_REG = [];
+            return GAMESTATE.rightwhat = true;
+        };
+    });
     canvas.addEventListener("mousedown", function (e) {
         return state.lastClickPos = [e.clientX, e.clientY];
     });
@@ -651,44 +522,26 @@ function initGame(state, canvas, width, height) {
     canvas.addEventListener("mouseup", function (e) {
         return delete state.lastClickPos;
     });
-    document.addEventListener("keydown", function (e) {
-        if (state.mouseXy !== undefined) {
-            if (e.code == "ControlLeft") {
-                return !state.lockPreywhat ? (state.lockPredwhat = true) : null;
-            } else if (e.code == "ShiftLeft") {
-                return !state.lockPredwhat ? (state.lockPreywhat = true) : null;
-            };
-        };
-    });
-    document.addEventListener("keyup", function (e) {
-        if (state.mouseXy !== undefined) {
-            if (e.code == "ControlLeft") {
-                return state.lockPredwhat = false;
-            } else if (e.code == "ShiftLeft") {
-                return state.lockPreywhat = false;
-            };
-        };
-    });
     canvas.addEventListener("mousemove", function (e) {
         var rect = canvas.getBoundingClientRect();
         var x = e.clientX - rect.left;
         var y = e.clientY - rect.top;
         state.mouseXy = [x, y];
         if (state.lastClickPos !== undefined) {
-            var form7361 = state.lastClickPos;
-            var x7362 = form7361[0];
-            var y7363 = form7361[1];
-            var deltaViewXy = [x7362 - e.clientX, y7363 - e.clientY];
-            var state7364 = state;
-            var canvas7365 = state7364.canvas;
-            var ctx = canvas7365.getContext("2d");
-            var viewWidth7366 = state7364.viewWidth;
-            var viewXy7367 = state7364.viewXy;
-            var canvasAspect = canvas7365.width / canvas7365.height;
-            var viewHeight = viewWidth7366 / canvasAspect;
-            var viewLeft = getViewLeft(viewWidth7366, viewXy7367);
-            var viewBottom = getViewBottom(viewHeight, viewXy7367);
-            state7364.viewXy = vecplus(state7364.viewXy, vecstar([viewWidth7366 / canvas7365.width, viewHeight / canvas7365.height], deltaViewXy));
+            var form7568 = state.lastClickPos;
+            var x7569 = form7568[0];
+            var y7570 = form7568[1];
+            var deltaViewXy = [x7569 - e.clientX, y7570 - e.clientY];
+            var state7571 = state;
+            var canvas7572 = state7571.canvas;
+            var ctx = canvas7572.getContext("2d");
+            var viewWidth7573 = state7571.viewWidth;
+            var viewXy7574 = state7571.viewXy;
+            var canvasAspect = canvas7572.width / canvas7572.height;
+            var viewHeight = viewWidth7573 / canvasAspect;
+            var viewLeft = getViewLeft(viewWidth7573, viewXy7574);
+            var viewBottom = getViewBottom(viewHeight, viewXy7574);
+            state7571.viewXy = vecplus(state7571.viewXy, vecstar([viewWidth7573 / canvas7572.width, viewHeight / canvas7572.height], deltaViewXy));
             __PS_MV_REG = [];
             return state.lastClickPos = [e.clientX, e.clientY];
         };
@@ -701,49 +554,28 @@ function initGame(state, canvas, width, height) {
     });
 };
 function stepGame(state, dt) {
-    var speed = SIMSPEED;
-    var predXy7368 = state.predXy;
-    var preyCoords7369 = state.preyCoords;
-    var preyDxdts = computePreyDxdts(predXy7368, preyCoords7369);
-    if (state.lockPredwhat) {
-        state.predXy = canvasXygreaterthanGameXy(state, state.mouseXy);
-    } else {
-        state.predXy = vecplus(state.predXy, scaleVec(speed * dt, computePredDxdt(predXy7368, preyCoords7369)));
-    };
-    for (var i = 0; i < preyCoords7369.length; i += 1) {
-        if (i === 0 && state.lockPreywhat) {
-            preyCoords7369[i] = canvasXygreaterthanGameXy(state, state.mouseXy);
-        } else {
-            preyCoords7369[i] = vecplus(preyCoords7369[i], scaleVec(speed * dt, preyDxdts[i]));
-        };
-    };
-    if (state.lockViewToPredwhat) {
-        __PS_MV_REG = [];
-        return state.viewXy = (state.viewXy = state.predXy);
-    } else if (state.lockViewToPreywhat && state.preyCoords.length >= 1) {
-        __PS_MV_REG = [];
-        return state.viewXy = (state.viewXy = state.preyCoords[0]);
+    if (!PAUSED) {
+        var speed = SIMSPEED;
+        var coords7575 = state.coords;
+        return null;
     };
 };
 function drawGame(state) {
-    var state7370 = state;
-    var canvas7371 = state7370.canvas;
-    var ctx = canvas7371.getContext("2d");
-    var viewWidth7372 = state7370.viewWidth;
-    var viewXy7373 = state7370.viewXy;
-    var canvasAspect = canvas7371.width / canvas7371.height;
-    var viewHeight = viewWidth7372 / canvasAspect;
-    var viewLeft = getViewLeft(viewWidth7372, viewXy7373);
-    var viewBottom = getViewBottom(viewHeight, viewXy7373);
+    var state7576 = state;
+    var canvas7577 = state7576.canvas;
+    var ctx = canvas7577.getContext("2d");
+    var viewWidth7578 = state7576.viewWidth;
+    var viewXy7579 = state7576.viewXy;
+    var canvasAspect = canvas7577.width / canvas7577.height;
+    var viewHeight = viewWidth7578 / canvasAspect;
+    var viewLeft = getViewLeft(viewWidth7578, viewXy7579);
+    var viewBottom = getViewBottom(viewHeight, viewXy7579);
     clearCanvas(ctx);
-    drawGrid(state7370);
-    drawCircle(state7370, state7370.predXy, [1, 0, 0]);
-    for (var i = 0; i < state7370.preyCoords.length; i += 1) {
-        if (i === 0 && state7370.lockViewToPreywhat) {
-            drawCircle(state7370, state7370.preyCoords[i], [0, 0, 1]);
-        } else {
-            drawCircle(state7370, state7370.preyCoords[i]);
-        };
+    drawGrid(state7576);
+    var nCars = state7576.coords.length / 2;
+    for (var i = 0; i < nCars; i += 1) {
+        var pos = state7576.coords[2 * i];
+        drawCircle(state7576, [pos, 0], i === nCars - 1 ? [1, 0, 0] : [0, 1, 0]);
     };
 };
 function runGame(state) {
@@ -760,6 +592,7 @@ function runGame(state) {
 };
 var GAMESTATE = {  };
 initGame(GAMESTATE, document.getElementById("game-canvas"));
+runGame(GAMESTATE);
 function makeSlide(title, points) {
     var slide = {  };
     slide.title = title;
@@ -779,15 +612,15 @@ function showSlide(i, slides, divId) {
         divId = "slides-div";
     };
     var slide = slides[i];
-    var title7374 = slide.title;
-    var points7375 = slide.points;
+    var title7580 = slide.title;
+    var points7581 = slide.points;
     var ul = document.createElement("ul");
     var div = document.getElementById(divId);
     div.innerHTML = "";
     appendChild("p", "text small-font-size", (i + 1) + "/" + slides.length, div);
-    appendChild("h1", "text", title7374, div);
-    for (var point = null, _js_idx7376 = 0; _js_idx7376 < points7375.length; _js_idx7376 += 1) {
-        point = points7375[_js_idx7376];
+    appendChild("h1", "text", title7580, div);
+    for (var point = null, _js_idx7582 = 0; _js_idx7582 < points7581.length; _js_idx7582 += 1) {
+        point = points7581[_js_idx7582];
         appendChild("p", "text large-font-size", point, appendChild("li", "text", "", ul));
     };
     div.appendChild(ul);
@@ -795,22 +628,7 @@ function showSlide(i, slides, divId) {
     return typeof MathJax !== "undefined" ? MathJax.typeset() : null;
 };
 var SLIDEI = 0;
-var SLIDES = [makeSlide("Predator-swarm interactions", []), makeSlide("The paper", ["A minimal model of predator-swarm interactions", "Chen and Kolokolnikov"]), makeSlide("Motivation", ["Group of prey being hunted by a predator", "Zebras vs lion, etc", "The prey swarm while trying to get away."]), makeSlide("The model", ["Let \\(\\mathbf{x}_j(t) \\in \\mathbb{R}^2 \\) " + "be the position of the " + "\\(j^{\\text{th}}\\) " + "prey at time \\(t\\).", "Let \\(\\mathbf{z}(t) \\in \\mathbb{R}^2 \\) " + "be the position of the " + "predator at time \\(t\\).", "Assume the prey and predator " + "obey Newton\'s second law: " + "\\(\\mathbf{F} = m \\mathbf{a}\\), " + "and that the prey and predator " + "have friction with the ground.", "\\(m_j \\frac{d^2 \\mathbf{x}_j}{dt^2} " + " = \\mathbf{F}_{\\text{prey$\\to$prey}_j} " + " + \\mathbf{F}_{\\text{predator$\\to$prey}_j} " + " - \\mu \\frac{d \\mathbf{x}_j}{dt} \\),"]), makeSlide("???", ["\\(N\\) prey live on \\(R^2\\)", "One predator lives on \\(R^2\\)", "The predator is trying to catch the prey"])];
-showSlide(0, SLIDES);
-document.addEventListener("keydown", function (e) {
-    if (e.code == "KeyJ") {
-        if (SLIDEI < SLIDES.length - 1) {
-            ++SLIDEI;
-            __PS_MV_REG = [];
-            return showSlide(SLIDEI, SLIDES);
-        };
-    } else if (e.code == "KeyK") {
-        if (SLIDEI > 0) {
-            --SLIDEI;
-            __PS_MV_REG = [];
-            return showSlide(SLIDEI, SLIDES);
-        };
-    };
-});
+var SLIDES = [makeSlide("...", ["..."])];
+showSlide(SLIDEI, SLIDES);
   </script>
 </html>

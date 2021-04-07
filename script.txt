@@ -6,20 +6,45 @@ Alright so the title of my presentation here is predator-swarm interactions, and
 
 SLIDE 2
 
-Right so the paper I'm going to be talking about is this paper from Chen and Kolokolnikov called "a minimal model of predator-swarm interactions".
+So the paper I'm going to be talking about is this paper from Chen and Kolokolnikov called "a minimal model of predator-swarm interactions".
 
 SLIDE 3
 
-So now I'm going to introduce the paper. Basically the idea is that in nature, you often have this situation where you have a bunch of prey animals, and they're being hunted by a predator. You can think of maybe a herd of zebras vs as lion or something. And often what happens is instead of the prey just like running away in random directions, they have this swarming behavior where they are trying to get away from the predator, but they also sort of stick together.
+So I'm going to give a little bit of background here. Basically the idea is that in nature, you often have this situation where you have a bunch of prey animals, and they're being hunted by a predator. You can think of maybe a herd of zebras vs as lion or something. And often what happens is instead of the prey just running away in random directions, instead you get this swarming behavior where the prey are trying to get away from the predator, but they also sort of stick together in a pack.
 
-So basically what this paper does is it introduces a model of this predator-swarm situation, and it sort of tries to hit a balance between being complicated enough to model the situation accurately and being simple enough to do some analysis stuff, like find the study the steady states and study their stabilities.
+So basically what this paper does is it introduces a model of this predator-swarm situation, and it sort of tries to hit a balance between being complicated enough to model the situation accurately while being simple enough to do some analysis stuff, like finding the study the steady states and studying their stabilities.
 
 SLIDE 4
 
-So now I'm going to introduce the model from the paper. We're going to look at a more general version a little later on where we will trade away some of the simplicity in exchange for more accuracy, but for now we're just sticking to the simple version where it's easy to find the steady states. And this simple version is actually pretty good. It captures a lot of the things you see in the physical situation as we'll see later in the numerical simulation.
+So now I'm going to introduce the model from the paper.
 
-So we're imagining that our prey and our predator live in 2D on the complex plane. You could extend it to 3D if you wanted to think about a flock of birds or some fish or something that lives more in 3D, but we'll stick with 2D because it's easy to draw.
+So we're imagining that we have many prey and one predator that live in 2D on the complex plane. You could extend it to three spatial dimensions if you wanted to think about a flock of birds or some fish or something that lives more in 3D, but we'll stick with 2D because it's easy to draw.
 
-So we're saying that we have N many prey, and that x_j(t) is the position of the jth prey at time t, and z(t) is the position of the predator at time t. And we're going to imagine these animals as point masses that exert forces on one another. So for example the predator should push prey away, and the prey should attract the predator. And it's probably reasonable to say that if you're an animal running around, that you experience a kind of friction in the opposite direction to where you're running, and we're saying that the magnitude of that friction should be proportional to the speed.
+So we're saying that we have N many prey, and that x_j(t) is the position of the jth prey at time t, and z(t) is the position of the predator at time t. And we're going to imagine these animals as point masses that exert forces on one another. So the predator should push prey away, and the prey should attract the predator, and the prey should be attracted to other prey but also repulsed by nearby prey so that they don't run into each other. And it's probably reasonable to say that if you're an animal running around, that you experience a kind of friction with the ground in the opposite direction to where you're running, and we're saying that the magnitude of that friction should be proportional to the speed.
 
-So then we end up with this general model.
+
+SLIDE 5
+
+So then we end up with something like this equation for the prey
+
+SLIDE 6
+
+and something like this for the predator. So now what we're going to do is we're going to make another assumption that will make this model even simpler.
+
+SLIDE 7
+
+We're going to assume that the friction coefficient is much larger than the mass. If you rearrange the equations a little bit, you can see that as the ratio of the friction coefficient to the mass approaches infinity,
+
+SLIDE 8
+
+the model tends toward this simpler first-order model.
+
+So the way we're going to choose these forces is we want the prey to be repulsed by the predator, and we want the prey to be repulsed by other prey that are close, but we also want the prey to be attracted to the swarm of prey. So the prey should be attracted to other prey that are sufficiently far away. And of course the predator should be attracted to the swarm. So if we do all that, we can end up with something like this.
+
+SLIDE 9
+
+So this is the full model from the paper. The first equation here is for the prey, and the second equation is for the predator. You can see that the prey is repulsed by nearby prey with this inverse square falloff, but you also have this long-range attraction in the opposite direction. And this last term is here pushes the prey away from the predator, also with an invese square falloff.
+
+In the second equation, the predator equation, this is just saying that the predator should be attracted the prey, especially the nearby ones. And you have this parameter p that controls the falloff of the attraction as a function of distance. So you can think of p as like how much the predator concetrates on nearby prey.
+
+And when the prey is sufficiently repulsed by the predator, you get this steady state which is just a ring that the prey forms around the predator.
