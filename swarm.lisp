@@ -630,7 +630,8 @@
 				       z-def
 				       prey-model-explicit
 				       pred-model-explicit)))))
-    (defparameter *slide-i* (1- (length *slides*)))
+    ;; (defparameter *slide-i* (1- (length *slides*)))
+    (defparameter *slide-i* 0)
     (show-slide *slide-i* *slides*)
 
     ((chain document add-event-listener) "keydown"
