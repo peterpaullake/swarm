@@ -1,0 +1,51 @@
+.dark-bg {
+    background-color: #0a0a0a;
+}
+
+.light-bg {
+    background-color: #151515;
+}
+
+.text {
+    color: #bbbbbb;
+    font-family: 'Ubuntu Mono', monospace;
+}
+
+.small-font-size {
+    font-size: 10px;
+}
+
+.large-font-size {
+    font-size: 20px;
+}
+
+#game-canvas {
+    float: left;
+}
+
+#help-table td {
+    padding: 10px;
+}
+
+td {
+    vertical-align: top;
+}
+
+.zero-top-margin {
+    margin-top: 0;
+}
+
+/* Two-column layout from
+   https://www.w3schools.com/howto/howto_css_two_columns.asp */
+
+.column {
+  float: left;
+  width: 50%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
