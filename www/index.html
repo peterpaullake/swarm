@@ -131,8 +131,8 @@ td {
     var arrs = Array.prototype.slice.call(arguments, 1);
     var resultArray = new Array();
     if (1 === arrs.length) {
-        for (var element = null, _js_arrvar514 = arrs[0], _js_idx513 = 0; _js_idx513 < _js_arrvar514.length; _js_idx513 += 1) {
-            element = _js_arrvar514[_js_idx513];
+        for (var element = null, _js_arrvar106 = arrs[0], _js_idx105 = 0; _js_idx105 < _js_arrvar106.length; _js_idx105 += 1) {
+            element = _js_arrvar106[_js_idx105];
             resultArray.push(fun(element));
         };
     } else {
@@ -149,8 +149,8 @@ td {
 /** Call FN on each element in ARR, replace element with the return value. */
 function mapInto(fn, arr) {
     var idx = 0;
-    for (var el = null, _js_idx515 = 0; _js_idx515 < arr.length; _js_idx515 += 1) {
-        el = arr[_js_idx515];
+    for (var el = null, _js_idx107 = 0; _js_idx107 < arr.length; _js_idx107 += 1) {
+        el = arr[_js_idx107];
         arr[idx] = fn(el);
         idx += 1;
     };
@@ -161,8 +161,8 @@ function mapInto(fn, arr) {
 function map(fn, arr) {
     var idx = 0;
     var result = [];
-    for (var el = null, _js_idx516 = 0; _js_idx516 < arr.length; _js_idx516 += 1) {
-        el = arr[_js_idx516];
+    for (var el = null, _js_idx108 = 0; _js_idx108 < arr.length; _js_idx108 += 1) {
+        el = arr[_js_idx108];
         result[idx] = fn(el);
         idx += 1;
     };
@@ -171,8 +171,8 @@ function map(fn, arr) {
 };
 /** Check if ITEM is a member of ARR. */
 function member(item, arr) {
-    for (var el = null, _js_idx517 = 0; _js_idx517 < arr.length; _js_idx517 += 1) {
-        el = arr[_js_idx517];
+    for (var el = null, _js_idx109 = 0; _js_idx109 < arr.length; _js_idx109 += 1) {
+        el = arr[_js_idx109];
         if (el === item) {
             return true;
         };
@@ -183,8 +183,8 @@ function member(item, arr) {
 function setDifference(arr, arrToSub) {
     var idx = 0;
     var result = [];
-    for (var el = null, _js_idx518 = 0; _js_idx518 < arr.length; _js_idx518 += 1) {
-        el = arr[_js_idx518];
+    for (var el = null, _js_idx110 = 0; _js_idx110 < arr.length; _js_idx110 += 1) {
+        el = arr[_js_idx110];
         if (!member(el, arrToSub)) {
             result[idx] = el;
             idx += 1;
@@ -203,9 +203,9 @@ function reduce(func, list, init) {
 function nconc(arr) {
     var arrs = Array.prototype.slice.call(arguments, 1);
     if (arr && arr.length > 0) {
-        var _js520 = arrs.length;
-        for (var _js519 = 0; _js519 < _js520; _js519 += 1) {
-            var other = arrs[_js519];
+        var _js112 = arrs.length;
+        for (var _js111 = 0; _js111 < _js112; _js111 += 1) {
+            var other = arrs[_js111];
             if (other && other.length > 0) {
                 arr["splice"]["apply"](arr, [arr.length, other.length].concat(other));
             };
@@ -264,8 +264,8 @@ function msg() {
         return lst[lst.length - 1];
     };
     var str = "";
-    for (var arg = null, _js_arrvar466 = butlast(args), _js_idx465 = 0; _js_idx465 < _js_arrvar466.length; _js_idx465 += 1) {
-        arg = _js_arrvar466[_js_idx465];
+    for (var arg = null, _js_arrvar58 = butlast(args), _js_idx57 = 0; _js_idx57 < _js_arrvar58.length; _js_idx57 += 1) {
+        arg = _js_arrvar58[_js_idx57];
         str = str + arg + " ";
     };
     str += last(args);
@@ -277,23 +277,23 @@ function getTime() {
     __PS_MV_REG = [];
     return performance.now();
 };
-function vecplus(v1_467, v2_468) {
+function vecplus(v1_59, v2_60) {
     __PS_MV_REG = [];
     return mapcar(function (a, b) {
         return a + b;
-    }, v1_467, v2_468);
+    }, v1_59, v2_60);
 };
-function vec(v1_469, v2_470) {
+function vec(v1_61, v2_62) {
     __PS_MV_REG = [];
     return mapcar(function (a, b) {
         return a - b;
-    }, v1_469, v2_470);
+    }, v1_61, v2_62);
 };
-function vecstar(v1_471, v2_472) {
+function vecstar(v1_63, v2_64) {
     __PS_MV_REG = [];
     return mapcar(function (a, b) {
         return a * b;
-    }, v1_471, v2_472);
+    }, v1_63, v2_64);
 };
 function scaleVec(a, v) {
     __PS_MV_REG = [];
@@ -303,8 +303,8 @@ function scaleVec(a, v) {
 };
 function sum(lst) {
     var s = 0;
-    for (var x = null, _js_idx473 = 0; _js_idx473 < lst.length; _js_idx473 += 1) {
-        x = lst[_js_idx473];
+    for (var x = null, _js_idx65 = 0; _js_idx65 < lst.length; _js_idx65 += 1) {
+        x = lst[_js_idx65];
         s += x;
     };
     var x = null;
@@ -330,21 +330,21 @@ function computePredDxdt(predXy, preyCoords, c, p) {
     var n = preyCoords.length;
     var z = predXy;
     __PS_MV_REG = [];
-    return scaleVec(c / n, (s474 = null, (n === 0 ? (function () {
+    return scaleVec(c / n, (s66 = null, (n === 0 ? (function () {
         throw "Empty vector sum";
     })() : null, (function () {
         var xk;
         for (var k = 0; k < n; k += 1) {
-            var delta475 = (xk = preyCoords[k], scaleVec(1 / Math.pow(vecLen2(vec(xk, z)), p / 2), vec(xk, z)));
-            if (s474 === null) {
-                s474 = delta475;
+            var delta67 = (xk = preyCoords[k], scaleVec(1 / Math.pow(vecLen2(vec(xk, z)), p / 2), vec(xk, z)));
+            if (s66 === null) {
+                s66 = delta67;
             } else {
-                s474 = vecplus(s474, delta475);
+                s66 = vecplus(s66, delta67);
             };
         };
         var k = null;
         __PS_MV_REG = [];
-        return s474;
+        return s66;
     })())));
 };
 function computePreyDxdts(predXy, preyCoords, a, b) {
@@ -359,21 +359,21 @@ function computePreyDxdts(predXy, preyCoords, a, b) {
         var z = predXy;
         var xj = preyCoords[j];
         __PS_MV_REG = [];
-        return vecplus(scaleVec(1 / n, (s476 = null, (n === 0 ? (function () {
+        return vecplus(scaleVec(1 / n, (s68 = null, (n === 0 ? (function () {
             throw "Empty vector sum";
         })() : null, (function () {
             var xk;
             for (var k = 0; k < n; k += 1) {
-                var delta477 = k === j ? [0, 0] : (xk = preyCoords[k], vec(scaleVec(1 / vecLen2(vec(xj, xk)), vec(xj, xk)), scaleVec(a, vec(xj, xk))));
-                if (s476 === null) {
-                    s476 = delta477;
+                var delta69 = k === j ? [0, 0] : (xk = preyCoords[k], vec(scaleVec(1 / vecLen2(vec(xj, xk)), vec(xj, xk)), scaleVec(a, vec(xj, xk))));
+                if (s68 === null) {
+                    s68 = delta69;
                 } else {
-                    s476 = vecplus(s476, delta477);
+                    s68 = vecplus(s68, delta69);
                 };
             };
             var k = null;
             __PS_MV_REG = [];
-            return s476;
+            return s68;
         })()))), scaleVec(b / vecLen2(vec(xj, z)), vec(xj, z)));
     };
     __PS_MV_REG = [];
@@ -442,10 +442,10 @@ function extendParamsTable(description, type, callback, value, min, max) {
     } else if (type === "range") {
         input.addEventListener("change", function (e) {
             var sliderValue = e.target.value;
-            var value478 = min + (sliderValue / 100) * (max - min);
-            rangeLabel.innerHTML = floatgreaterthanStr(value478);
+            var value70 = min + (sliderValue / 100) * (max - min);
+            rangeLabel.innerHTML = floatgreaterthanStr(value70);
             __PS_MV_REG = [];
-            return callback(value478);
+            return callback(value70);
         });
         input.setAttribute("step", 0.01);
         rangeLabel.setAttribute("class", "text zero-top-margin");
@@ -531,15 +531,15 @@ function drawGrid(state, color, width) {
     if (width === undefined) {
         width = 0.2;
     };
-    var state479 = state;
-    var canvas480 = state479.canvas;
-    var ctx = canvas480.getContext("2d");
-    var viewWidth481 = state479.viewWidth;
-    var viewXy482 = state479.viewXy;
-    var canvasAspect = canvas480.width / canvas480.height;
-    var viewHeight = viewWidth481 / canvasAspect;
-    var viewLeft = getViewLeft(viewWidth481, viewXy482);
-    var viewBottom = getViewBottom(viewHeight, viewXy482);
+    var state71 = state;
+    var canvas72 = state71.canvas;
+    var ctx = canvas72.getContext("2d");
+    var viewWidth73 = state71.viewWidth;
+    var viewXy74 = state71.viewXy;
+    var canvasAspect = canvas72.width / canvas72.height;
+    var viewHeight = viewWidth73 / canvasAspect;
+    var viewLeft = getViewLeft(viewWidth73, viewXy74);
+    var viewBottom = getViewBottom(viewHeight, viewXy74);
     var drawSeg = function (x, verticalwhat) {
         if (verticalwhat === undefined) {
             verticalwhat = true;
@@ -548,10 +548,10 @@ function drawGrid(state, color, width) {
         ctx.beginPath();
         if (verticalwhat) {
             ctx.moveTo(x, 0);
-            ctx.lineTo(x, canvas480.height);
+            ctx.lineTo(x, canvas72.height);
         } else {
             ctx.moveTo(0, x);
-            ctx.lineTo(canvas480.width, x);
+            ctx.lineTo(canvas72.width, x);
         };
         __PS_MV_REG = [];
         return ctx.stroke();
@@ -560,43 +560,43 @@ function drawGrid(state, color, width) {
     var y0 = Math.ceil(viewBottom / width) * width;
     var x = x0;
     var y = y0;
-    for (; !(x > viewLeft + viewWidth481 && y > viewBottom + viewHeight); ) {
-        var form483 = gameXygreaterthanCanvasXy(state479, [x, y]);
-        var canvasX = form483[0];
-        var canvasY = form483[1];
+    for (; !(x > viewLeft + viewWidth73 && y > viewBottom + viewHeight); ) {
+        var form75 = gameXygreaterthanCanvasXy(state71, [x, y]);
+        var canvasX = form75[0];
+        var canvasY = form75[1];
         drawSeg(canvasX);
         drawSeg(canvasY, false);
-        var _js484 = x + width;
-        var _js485 = y + width;
-        x = _js484;
-        y = _js485;
+        var _js76 = x + width;
+        var _js77 = y + width;
+        x = _js76;
+        y = _js77;
     };
 };
 function canvasXygreaterthanGameXy(state, xy) {
-    var state483 = state;
-    var canvas484 = state483.canvas;
-    var ctx = canvas484.getContext("2d");
-    var viewWidth485 = state483.viewWidth;
-    var viewXy486 = state483.viewXy;
-    var canvasAspect = canvas484.width / canvas484.height;
-    var viewHeight = viewWidth485 / canvasAspect;
-    var viewLeft = getViewLeft(viewWidth485, viewXy486);
-    var viewBottom = getViewBottom(viewHeight, viewXy486);
+    var state75 = state;
+    var canvas76 = state75.canvas;
+    var ctx = canvas76.getContext("2d");
+    var viewWidth77 = state75.viewWidth;
+    var viewXy78 = state75.viewXy;
+    var canvasAspect = canvas76.width / canvas76.height;
+    var viewHeight = viewWidth77 / canvasAspect;
+    var viewLeft = getViewLeft(viewWidth77, viewXy78);
+    var viewBottom = getViewBottom(viewHeight, viewXy78);
     __PS_MV_REG = [];
-    return [viewLeft + (xy[0] / canvas484.width) * viewWidth485, viewBottom + (xy[1] / canvas484.height) * viewHeight];
+    return [viewLeft + (xy[0] / canvas76.width) * viewWidth77, viewBottom + (xy[1] / canvas76.height) * viewHeight];
 };
 function gameXygreaterthanCanvasXy(state, xy) {
-    var state487 = state;
-    var canvas488 = state487.canvas;
-    var ctx = canvas488.getContext("2d");
-    var viewWidth489 = state487.viewWidth;
-    var viewXy490 = state487.viewXy;
-    var canvasAspect = canvas488.width / canvas488.height;
-    var viewHeight = viewWidth489 / canvasAspect;
-    var viewLeft = getViewLeft(viewWidth489, viewXy490);
-    var viewBottom = getViewBottom(viewHeight, viewXy490);
+    var state79 = state;
+    var canvas80 = state79.canvas;
+    var ctx = canvas80.getContext("2d");
+    var viewWidth81 = state79.viewWidth;
+    var viewXy82 = state79.viewXy;
+    var canvasAspect = canvas80.width / canvas80.height;
+    var viewHeight = viewWidth81 / canvasAspect;
+    var viewLeft = getViewLeft(viewWidth81, viewXy82);
+    var viewBottom = getViewBottom(viewHeight, viewXy82);
     __PS_MV_REG = [];
-    return [((xy[0] - viewLeft) / viewWidth489) * canvas488.width, ((xy[1] - viewBottom) / viewHeight) * canvas488.height];
+    return [((xy[0] - viewLeft) / viewWidth81) * canvas80.width, ((xy[1] - viewBottom) / viewHeight) * canvas80.height];
 };
 function drawCircle(state, xy, color, radius) {
     if (color === undefined) {
@@ -605,18 +605,18 @@ function drawCircle(state, xy, color, radius) {
     if (radius === undefined) {
         radius = 3;
     };
-    var state491 = state;
-    var canvas492 = state491.canvas;
-    var ctx = canvas492.getContext("2d");
-    var viewWidth493 = state491.viewWidth;
-    var viewXy494 = state491.viewXy;
-    var canvasAspect = canvas492.width / canvas492.height;
-    var viewHeight = viewWidth493 / canvasAspect;
-    var viewLeft = getViewLeft(viewWidth493, viewXy494);
-    var viewBottom = getViewBottom(viewHeight, viewXy494);
-    var form495 = gameXygreaterthanCanvasXy(state491, xy);
-    var x = form495[0];
-    var y = form495[1];
+    var state83 = state;
+    var canvas84 = state83.canvas;
+    var ctx = canvas84.getContext("2d");
+    var viewWidth85 = state83.viewWidth;
+    var viewXy86 = state83.viewXy;
+    var canvasAspect = canvas84.width / canvas84.height;
+    var viewHeight = viewWidth85 / canvasAspect;
+    var viewLeft = getViewLeft(viewWidth85, viewXy86);
+    var viewBottom = getViewBottom(viewHeight, viewXy86);
+    var form87 = gameXygreaterthanCanvasXy(state83, xy);
+    var x = form87[0];
+    var y = form87[1];
     ctx.fillStyle = colorgreaterthanStr(color);
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, 2 * Math.PI);
@@ -687,20 +687,20 @@ function initGame(state, canvas, width, height) {
         var y = e.clientY - rect.top;
         state.mouseXy = [x, y];
         if (state.lastClickPos !== undefined) {
-            var form497 = state.lastClickPos;
-            var x498 = form497[0];
-            var y499 = form497[1];
-            var deltaViewXy = [x498 - e.clientX, y499 - e.clientY];
-            var state500 = state;
-            var canvas501 = state500.canvas;
-            var ctx = canvas501.getContext("2d");
-            var viewWidth502 = state500.viewWidth;
-            var viewXy503 = state500.viewXy;
-            var canvasAspect = canvas501.width / canvas501.height;
-            var viewHeight = viewWidth502 / canvasAspect;
-            var viewLeft = getViewLeft(viewWidth502, viewXy503);
-            var viewBottom = getViewBottom(viewHeight, viewXy503);
-            state500.viewXy = vecplus(state500.viewXy, vecstar([viewWidth502 / canvas501.width, viewHeight / canvas501.height], deltaViewXy));
+            var form89 = state.lastClickPos;
+            var x90 = form89[0];
+            var y91 = form89[1];
+            var deltaViewXy = [x90 - e.clientX, y91 - e.clientY];
+            var state92 = state;
+            var canvas93 = state92.canvas;
+            var ctx = canvas93.getContext("2d");
+            var viewWidth94 = state92.viewWidth;
+            var viewXy95 = state92.viewXy;
+            var canvasAspect = canvas93.width / canvas93.height;
+            var viewHeight = viewWidth94 / canvasAspect;
+            var viewLeft = getViewLeft(viewWidth94, viewXy95);
+            var viewBottom = getViewBottom(viewHeight, viewXy95);
+            state92.viewXy = vecplus(state92.viewXy, vecstar([viewWidth94 / canvas93.width, viewHeight / canvas93.height], deltaViewXy));
             __PS_MV_REG = [];
             return state.lastClickPos = [e.clientX, e.clientY];
         };
@@ -715,19 +715,19 @@ function initGame(state, canvas, width, height) {
 function stepGame(state, dt) {
     if (!PAUSED) {
         var speed = SIMSPEED;
-        var predXy504 = state.predXy;
-        var preyCoords505 = state.preyCoords;
-        var preyDxdts = computePreyDxdts(predXy504, preyCoords505);
+        var predXy96 = state.predXy;
+        var preyCoords97 = state.preyCoords;
+        var preyDxdts = computePreyDxdts(predXy96, preyCoords97);
         if (state.lockPredwhat) {
             state.predXy = canvasXygreaterthanGameXy(state, state.mouseXy);
         } else {
-            state.predXy = vecplus(state.predXy, scaleVec(speed * dt, computePredDxdt(predXy504, preyCoords505)));
+            state.predXy = vecplus(state.predXy, scaleVec(speed * dt, computePredDxdt(predXy96, preyCoords97)));
         };
-        for (var i = 0; i < preyCoords505.length; i += 1) {
+        for (var i = 0; i < preyCoords97.length; i += 1) {
             if (i === 0 && state.lockPreywhat) {
-                preyCoords505[i] = canvasXygreaterthanGameXy(state, state.mouseXy);
+                preyCoords97[i] = canvasXygreaterthanGameXy(state, state.mouseXy);
             } else {
-                preyCoords505[i] = vecplus(preyCoords505[i], scaleVec(speed * dt, preyDxdts[i]));
+                preyCoords97[i] = vecplus(preyCoords97[i], scaleVec(speed * dt, preyDxdts[i]));
             };
         };
         if (state.lockViewToPredwhat) {
@@ -740,23 +740,23 @@ function stepGame(state, dt) {
     };
 };
 function drawGame(state) {
-    var state506 = state;
-    var canvas507 = state506.canvas;
-    var ctx = canvas507.getContext("2d");
-    var viewWidth508 = state506.viewWidth;
-    var viewXy509 = state506.viewXy;
-    var canvasAspect = canvas507.width / canvas507.height;
-    var viewHeight = viewWidth508 / canvasAspect;
-    var viewLeft = getViewLeft(viewWidth508, viewXy509);
-    var viewBottom = getViewBottom(viewHeight, viewXy509);
+    var state98 = state;
+    var canvas99 = state98.canvas;
+    var ctx = canvas99.getContext("2d");
+    var viewWidth100 = state98.viewWidth;
+    var viewXy101 = state98.viewXy;
+    var canvasAspect = canvas99.width / canvas99.height;
+    var viewHeight = viewWidth100 / canvasAspect;
+    var viewLeft = getViewLeft(viewWidth100, viewXy101);
+    var viewBottom = getViewBottom(viewHeight, viewXy101);
     clearCanvas(ctx);
-    drawGrid(state506);
-    drawCircle(state506, state506.predXy, [1, 0, 0]);
-    for (var i = 0; i < state506.preyCoords.length; i += 1) {
-        if (i === 0 && state506.lockViewToPreywhat) {
-            drawCircle(state506, state506.preyCoords[i], [0, 0, 1]);
+    drawGrid(state98);
+    drawCircle(state98, state98.predXy, [1, 0, 0]);
+    for (var i = 0; i < state98.preyCoords.length; i += 1) {
+        if (i === 0 && state98.lockViewToPreywhat) {
+            drawCircle(state98, state98.preyCoords[i], [0, 0, 1]);
         } else {
-            drawCircle(state506, state506.preyCoords[i]);
+            drawCircle(state98, state98.preyCoords[i]);
         };
     };
 };
@@ -794,15 +794,15 @@ function showSlide(i, slides, divId) {
         divId = "slides-div";
     };
     var slide = slides[i];
-    var title510 = slide.title;
-    var points511 = slide.points;
+    var title102 = slide.title;
+    var points103 = slide.points;
     var ul = document.createElement("ul");
     var div = document.getElementById(divId);
     div.innerHTML = "";
     appendChild("p", "text small-font-size", (i + 1) + "/" + slides.length, div);
-    appendChild("h1", "text", title510, div);
-    for (var point = null, _js_idx512 = 0; _js_idx512 < points511.length; _js_idx512 += 1) {
-        point = points511[_js_idx512];
+    appendChild("h1", "text", title102, div);
+    for (var point = null, _js_idx104 = 0; _js_idx104 < points103.length; _js_idx104 += 1) {
+        point = points103[_js_idx104];
         appendChild("p", "text large-font-size", point, appendChild("li", "text", "", ul));
     };
     div.appendChild(ul);
